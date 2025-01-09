@@ -2,14 +2,20 @@
 UW MSDS Capstone Project with Northwest Research Associates
 
 ### Files
+!! need to add file description and any intermediate output files with their schema and description
 
 `data_upload.ipynb` - Upload raw txt files from provided USB to Google Drive
 
 `data_file_cleaning.ipynb` - Clean duplicate txt files from Google Drive
 
-`data_cleaning_combined_data.ipynb`
+`data_cleaning_combined_data.ipynb` - Extract tropical cyclone ID and name from file name, combine individual trackfiles and WWLLN data files into one overall trackfile and one WWLLN data file.
 
-`cyclone_EDA.ipynb`
+Outputs:
+- `processed_files/` - add TC ID and name to each raw file and save as an intermediate file
+- `combined_files/Combined_Reduced_Trackfile` - combined trackfiles for all TCs from 2010-2020
+- `combined_files/Combined_WWLLN_Locations` - combined WWLLN location data for all TCs from 2010-2020
+
+`cyclone_EDA.ipynb` -
 
 Upload the data - Done
 
