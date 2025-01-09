@@ -11,7 +11,7 @@ UW MSDS Capstone Project with Northwest Research Associates
 `data_cleaning_combined_data.ipynb` - Extract tropical cyclone ID and name from file name, combine individual trackfiles and WWLLN data files into one overall trackfile and one WWLLN data file.
 
 Outputs:
-- `processed_files/` - add TC ID and name to each raw file and save as an intermediate file
+- `processed_files/` - add TC ID and name as columns to each raw file and save as an intermediate file
 - `combined_files/Combined_Reduced_Trackfile.txt` - combined trackfiles for all TCs from 2010-2020
 - `combined_files/Combined_WWLLN_Locations.txt` - combined WWLLN location data for all TCs from 2010-2020
 
