@@ -1,7 +1,7 @@
 # Lighting-Analysis
 UW MSDS Capstone Project with Northwest Research Associates
 
-### Files
+### Code
 !! need to add file description and any intermediate output files with their schema and description
 
 `data_upload.ipynb` - Upload raw txt files from provided USB to Google Drive
@@ -12,8 +12,8 @@ UW MSDS Capstone Project with Northwest Research Associates
 
 Outputs:
 - `processed_files/` - add TC ID and name to each raw file and save as an intermediate file
-- `combined_files/Combined_Reduced_Trackfile` - combined trackfiles for all TCs from 2010-2020
-- `combined_files/Combined_WWLLN_Locations` - combined WWLLN location data for all TCs from 2010-2020
+- `combined_files/Combined_Reduced_Trackfile.txt` - combined trackfiles for all TCs from 2010-2020
+- `combined_files/Combined_WWLLN_Locations.txt` - combined WWLLN location data for all TCs from 2010-2020
 
 `cyclone_EDA.ipynb` -
 
