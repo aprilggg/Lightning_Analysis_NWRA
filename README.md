@@ -1,36 +1,22 @@
-# Lightning-Analysis
+# Lighting-Analysis
 UW MSDS Capstone Project with Northwest Research Associates
 
-## Objective
+### Code
+!! need to add file description and any intermediate output files with their schema and description
 
-## Table of Contents
+`data_upload.ipynb` - Upload raw txt files from provided USB to Google Drive
 
-| Team Member  | GitHub                                   |
-|------------------|--------------------------------------|
-| April Gao       | [aprilggg](https://github.com/aprilggg)    |
-| Elaine Zhang     | [ezhang17](https://github.com/ezhang17)|
-| Janice Kim      | [ymkim814](https://github.com/ymkim814)|
-## Directory Summary
-**data_pipeline** - contains notebooks used to upload, clean, process, and create data files used in the analysis portion of this project
+`data_file_cleaning.ipynb` - Clean duplicate txt files from Google Drive
 
-**exploratory_analysis** - contains notebooks as well as visualizations created in the exploratory analysis portion of this project
+`data_cleaning_combined_data.ipynb` - Extract tropical cyclone ID and name from file name, combine individual trackfiles and WWLLN data files into one overall trackfile and one WWLLN data file.
 
-### Directory Structure
-```
-.
-├── data_pipeline
-|   └── README.md
-|   └── data_file_cleaning.ipynb
-|   └── data_processing.ipynb
-|   └── data_upload.ipynb
-├── exploratory_analysis
-|   └── README.md
-|   └── exploratory_analysis.ipynb
-├── LICENSE
-├── README.md
-├── lightning_threshold_innercore.ipynb
-├──
-└── lightning_threshold_rainband.ipynb
-```
+Outputs:
+- `processed_files/` - add TC ID and name as columns to each raw file and save as an intermediate file
+- `combined_files/Combined_Reduced_Trackfile.txt` - combined trackfiles for all TCs from 2010-2020
+- `combined_files/Combined_WWLLN_Locations.txt` - combined WWLLN location data for all TCs from 2010-2020
 
-Detailed documentation on code requirements and file outputs can be found in each folder's README file.
+`cyclone_EDA.ipynb` -
+
+Upload the data - Done
+
+Clean and combine the data - tracking and location data - Done; with headers and cyclone code (unique) & name (not unique)
