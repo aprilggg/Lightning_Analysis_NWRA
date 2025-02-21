@@ -23,13 +23,27 @@ UW MSDS Capstone Project with Northwest Research Associates
 |   └── data_file_cleaning.ipynb
 |   └── data_processing.ipynb
 |   └── data_upload.ipynb
+|   └── shear_data.ipynb
 ├── exploratory_analysis
-|   └── README.md
+|   └── basin_descriptive_analysis.ipynb
 |   └── exploratory_analysis.ipynb
+├── innercore_analysis
+|   └── data
+|       └── ...
+|   └── visualizations
+|       └── ...
+|   └── lightning_threshold_innercore.ipynb
+├── vis_data
+|   └── README.md
+|   └── basin_bursts_summary.csv
+|   └── basin_threshold_bursts.csv
+|   └── basin_threshold_tc_summary.csv
+|   └── tc_lightning_vis_data.csv
+|   └── tc_threshold.csv
+|   └── threshold_summary.csv
 ├── LICENSE
 ├── README.md
-├── lightning_threshold_innercore.ipynb
-├──
+├── burst_w_intensification.ipynb
 └── lightning_threshold_rainband.ipynb
 ```
 
