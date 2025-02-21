@@ -48,3 +48,4 @@ UW MSDS Capstone Project with Northwest Research Associates
 ```
 
 Detailed documentation on code requirements and file outputs can be found in each folder's README file.
+
