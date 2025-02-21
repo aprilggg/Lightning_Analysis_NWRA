@@ -15,6 +15,11 @@ The notebooks should be executed in the following order:
     - bin lightning events into 30-minute bins
     - join lightning bins with TC wind and pressure data
     - calculate current category and intensification change
+4. **`shear_data.ipynb`**
+    - combine individual TC shear data files into one consolidated file
+    - calculate shear angle and quadrant for rainband lightning events
+    - create timebins for rainband data
+    - join rainband WWLLN data to trackfiles
 
 ### Code Requirements
 The data pipeline notebooks require the following libraries not built in to Python:
