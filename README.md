@@ -15,6 +15,10 @@ UW MSDS Capstone Project with Northwest Research Associates
 
 **exploratory_analysis** - contains notebooks as well as visualizations created in the exploratory analysis portion of this project
 
+**innercore_analysis** - contains notebooks, datasets, and visualizations created in the statistical analysis of inner core lightning bursts at both the individual TC and basin levels
+
+**vis_data** - contains data files used in the Power BI dashboard
+
 ### Directory Structure
 ```
 .
