@@ -23,11 +23,14 @@ UW MSDS Capstone Project with Northwest Research Associates
 ```
 .
 ├── data_pipeline
+|   └── data
+|       └── ...
 |   └── README.md
 |   └── data_file_cleaning.ipynb
 |   └── data_processing.ipynb
 |   └── data_upload.ipynb
-|   └── shear_data.ipynb
+|   └── rainband_data.ipynb
+|   └── shear_data_file_log.txt
 ├── exploratory_analysis
 |   └── basin_descriptive_analysis.ipynb
 |   └── exploratory_analysis.ipynb
