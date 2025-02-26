@@ -57,9 +57,7 @@ UW MSDS Capstone Project with Northwest Research Associates
 |   └── tc_threshold.csv
 |   └── threshold_summary.csv
 ├── LICENSE
-├── README.md
-├── burst_w_intensification.ipynb
-└── lightning_threshold_rainband.ipynb
+└── README.md
 ```
 
 Detailed documentation on code requirements and file outputs can be found in each folder's README file.
