@@ -15,7 +15,9 @@ UW MSDS Capstone Project with Northwest Research Associates
 
 **exploratory_analysis** - contains notebooks as well as visualizations created in the exploratory analysis portion of this project
 
-**innercore_analysis** - contains notebooks, datasets, and visualizations created in the statistical analysis of inner core lightning bursts at both the individual TC and basin levels
+**intensification_analysis** - contains notebooks and visualizations for the statistical analysis of the relationship between lightning bursts and TC intensification change
+
+**lightning_burst_identification** - contains notebooks, datasets, and visualizations created in the statistical identification of inner core and rainband lightning bursts at both the individual TC and basin levels
 
 **vis_data** - contains data files used in the Power BI dashboard
 
@@ -34,12 +36,18 @@ UW MSDS Capstone Project with Northwest Research Associates
 ├── exploratory_analysis
 |   └── basin_descriptive_analysis.ipynb
 |   └── exploratory_analysis.ipynb
-├── innercore_analysis
+├── intensification_analysis
+|   └── burst_w_intensification.ipynb
+├── lightning_burst_identification
 |   └── data
 |       └── ...
 |   └── visualizations
 |       └── ...
+|   └── README.md
+|   └── __init__.py
+|   └── lightning_threshold_functions.py
 |   └── lightning_threshold_innercore.ipynb
+|   └── lightning_threshold_rainband.ipynb
 ├── vis_data
 |   └── README.md
 |   └── basin_bursts_summary.csv

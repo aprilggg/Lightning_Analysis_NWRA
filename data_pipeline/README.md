@@ -1,6 +1,6 @@
 # Data Pipeline
 
-### About Code
+### About Directory
 The Juptyer Notebook files in this directory are used to upload data to Google Drive, clean up duplicate files, and create combined files for use in the analysis portion of this project.
 
 The notebooks should be executed in the following order:
@@ -20,6 +20,8 @@ The notebooks should be executed in the following order:
     - calculate shear angle and quadrant for rainband lightning events
     - create timebins for rainband data
     - join rainband WWLLN data to trackfiles
+
+This directory also includes a `data/` directory containing the outputted intermediate files from the data pipeline used in subsequent analysis.
 
 ### Code Requirements
 The data pipeline notebooks require the following libraries not built in to Python:
