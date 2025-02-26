@@ -2,20 +2,20 @@
 # coding: utf-8
 
 # # Inner Core Lightning Threshold Analysis
-# In this notebook, we define the threshold for what constitutes a "lightning burst" in the inner core of a tropical cyclone. 
-# 
+# In this notebook, we define the threshold for what constitutes a "lightning burst" in the inner core of a tropical cyclone.
+#
 # ### How do we define a burst of lightning?
 # We define a lightning burst based off the number of lightning instances in a 30-minute time bin.
 # We start by assuming the distribution of lightning in the inner core is Gaussian.
-# 
+#
 # *We look at each basin separately. Below are the basin codes:
 # * ATL - Atlantic Ocean basin
-# * CPAC - 
+# * CPAC -
 # * EPAC - Eastern Pacific basin
 # * IO - Indian Ocean basin
 # * SHEM - Southern Hemisphere basin
 # * WPAC - Western North Pacific basin
-# 
+#
 # ## Code
 # ### Import Libraries and Files
 # Let's start by importing necessary libraries and files. The inner core dataset is created in the `data_processing.ipynb` notebook as `innercore_timebin_joined.csv`.
@@ -86,9 +86,9 @@ storm_names = innercore_data[["storm_code", "storm_name"]].unique()
 
 
 # ### Functions
-# 
-# Below are the functions used to evaluate 6 different lightning burst thresholds at the individual TC level. We compare each TC's lightning to itself to identify a burst using the IQR, MAD, and Lognormal methods. The thresholds defined by each of these functions act as a standard for a lightning burst for that TC. If the count in the bin is more than the threshold, we mark it as a lightning burst. Note that we use log-transformed lightning counts in this analysis. We do not include data associated with current wind speeds less than 40 knots in this threshold analysis. 
-# 
+#
+# Below are the functions used to evaluate 6 different lightning burst thresholds at the individual TC level. We compare each TC's lightning to itself to identify a burst using the IQR, MAD, and Lognormal methods. The thresholds defined by each of these functions act as a standard for a lightning burst for that TC. If the count in the bin is more than the threshold, we mark it as a lightning burst. Note that we use log-transformed lightning counts in this analysis. We do not include data associated with current wind speeds less than 40 knots in this threshold analysis.
+#
 # We also create functions to apply the thresholds and aggregate results, as well as functions used to plot individual TCs for analysis.
 
 # In[5]:
@@ -327,10 +327,11 @@ def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type):
     ax2.tick_params(axis='y', labelcolor="#d16002")
 
     # Create third y-axis for wind knot
-    ax2 = ax1.twinx()
-    ax2.plot(lightning_data['time_bin'], lightning_data['knots'], label='Wind', color='blue')
-    ax2.set_ylabel("Wind", color="#0603a8")
-    ax2.tick_params(axis='y', labelcolor="#0603a8")
+    ax3 = ax1.twinx()
+    ax3.spines['right'].set_position(('outward', 80))  # Move the third axis outward for separation
+    ax3.plot(df['time_bin'], df['knots'], label='Wind', color='blue')
+    ax3.set_ylabel("Wind", color="#0603a8", fontsize = 18)
+    ax3.tick_params(axis='y', labelcolor="#0603a8")
 
     # Call bg colors function
     legend_patches = add_bg_colors(ax1, lightning_data, bg_type)
