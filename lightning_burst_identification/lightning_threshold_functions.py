@@ -302,9 +302,9 @@ def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type):
 
     # Create third y-axis for wind knot
     ax3 = ax1.twinx()
-    ax3.spines['right'].set_position(('outward', 80))  # Move the third axis outward for separation
-    ax3.plot(df['time_bin'], df['knots'], label='Wind', color='blue')
-    ax3.set_ylabel("Wind", color="#0603a8", fontsize = 18)
+    ax3.spines['right'].set_position(('outward', 50))  # Move the third axis outward for separation
+    ax3.plot(lightning_data['time_bin'], lightning_data['knots'], label='Wind', color='blue')
+    ax3.set_ylabel("Wind", color="#0603a8")
     ax3.tick_params(axis='y', labelcolor="#0603a8")
 
     # Call bg colors function
