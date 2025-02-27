@@ -5,6 +5,7 @@ dependencies:
   - matplotlib=3.10.0=py313haa95532_0
   - numpy=2.2.2=py313he6dc315_0
   - pandas=2.2.3=py313h5da7b33_0
+  - pyarrow=19.0.0=py313h5da7b33_1
   - scipy=1.15.1=py313hd4070db_0
   - pip:
       - cartopy==0.24.1
