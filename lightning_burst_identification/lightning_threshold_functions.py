@@ -154,17 +154,17 @@ def apply_individual_thresholds(df):
     return bursts
 
 # Function to apply the 3 methods, 6 thresholds for individual TCs
-def apply_individual_thresholds_quad(df):
-    bursts = df.groupby(["storm_code", 'shear_quad']).apply(detect_bursts_iqr)
-    bursts.reset_index(drop=True, inplace=True)
-    bursts = bursts.groupby(["storm_code", 'shear_quad']).apply(detect_bursts_mad)
-    bursts.reset_index(drop=True, inplace=True)
-    bursts = bursts.groupby(["storm_code", 'shear_quad']).apply(detect_bursts_lognormal)
-    bursts.reset_index(drop=True, inplace=True)
-    # Reset index to keep data points in chronological order
-    bursts.sort_values(by=["storm_code",  "time_bin", 'shear_quad'], inplace=True)
-    bursts.reset_index(drop=True, inplace=True)
-    return bursts
+# def apply_individual_thresholds_quad(df):
+#     bursts = df.groupby(["storm_code", 'shear_quad']).apply(detect_bursts_iqr)
+#     bursts.reset_index(drop=True, inplace=True)
+#     bursts = bursts.groupby(["storm_code", 'shear_quad']).apply(detect_bursts_mad)
+#     bursts.reset_index(drop=True, inplace=True)
+#     bursts = bursts.groupby(["storm_code", 'shear_quad']).apply(detect_bursts_lognormal)
+#     bursts.reset_index(drop=True, inplace=True)
+#     # Reset index to keep data points in chronological order
+#     bursts.sort_values(by=["storm_code",  "time_bin", 'shear_quad'], inplace=True)
+#     bursts.reset_index(drop=True, inplace=True)
+#     return bursts
 
 # Function used to aggregate results dataframe
 def create_tc_summary(processed):
@@ -194,32 +194,32 @@ def create_tc_summary(processed):
     tc_summary["logn2_prop"] = round((tc_summary["logn2_bursts"]/tc_summary["total_bins"])*100, 2)
     return tc_summary
 
-def create_tc_summary_quad(processed):
-    tc_summary = processed.groupby(["storm_code",'shear_quad']).agg(
-        mad1_bursts=('burst_mad1', 'sum'),
-        mad2_bursts=('burst_mad2', 'sum'),
-        mad1_threshold=('mad1_threshold', 'max'),
-        mad2_threshold=('mad2_threshold', 'max'),
-        iqr1_bursts=('burst_iqr1', 'sum'),
-        iqr2_bursts=('burst_iqr2', 'sum'),
-        iqr1_threshold=('iqr1_threshold', 'max'),
-        iqr2_threshold=('iqr2_threshold', 'max'),
-        logn1_bursts=('burst_logn1', 'sum'),
-        logn2_bursts=('burst_logn2', 'sum'),
-        logn1_threshold=('logn1_threshold', 'max'),
-        logn2_threshold=('logn2_threshold', 'max'),
-        total_bins=('storm_code', 'count')
-    )
-    tc_summary.reset_index(drop=False, inplace=True)
-    tc_summary.head(10)
+# def create_tc_summary_quad(processed):
+#     tc_summary = processed.groupby(["storm_code",'shear_quad']).agg(
+#         mad1_bursts=('burst_mad1', 'sum'),
+#         mad2_bursts=('burst_mad2', 'sum'),
+#         mad1_threshold=('mad1_threshold', 'max'),
+#         mad2_threshold=('mad2_threshold', 'max'),
+#         iqr1_bursts=('burst_iqr1', 'sum'),
+#         iqr2_bursts=('burst_iqr2', 'sum'),
+#         iqr1_threshold=('iqr1_threshold', 'max'),
+#         iqr2_threshold=('iqr2_threshold', 'max'),
+#         logn1_bursts=('burst_logn1', 'sum'),
+#         logn2_bursts=('burst_logn2', 'sum'),
+#         logn1_threshold=('logn1_threshold', 'max'),
+#         logn2_threshold=('logn2_threshold', 'max'),
+#         total_bins=('storm_code', 'count')
+#     )
+#     tc_summary.reset_index(drop=False, inplace=True)
+#     tc_summary.head(10)
 
-    tc_summary["mad1_prop"] = round((tc_summary["mad1_bursts"]/tc_summary["total_bins"])*100, 2)
-    tc_summary["mad2_prop"] = round((tc_summary["mad2_bursts"]/tc_summary["total_bins"])*100, 2)
-    tc_summary["iqr1_prop"] = round((tc_summary["iqr1_bursts"]/tc_summary["total_bins"])*100, 2)
-    tc_summary["iqr2_prop"] = round((tc_summary["iqr2_bursts"]/tc_summary["total_bins"])*100, 2)
-    tc_summary["logn1_prop"] = round((tc_summary["logn1_bursts"]/tc_summary["total_bins"])*100, 2)
-    tc_summary["logn2_prop"] = round((tc_summary["logn2_bursts"]/tc_summary["total_bins"])*100, 2)
-    return tc_summary
+#     tc_summary["mad1_prop"] = round((tc_summary["mad1_bursts"]/tc_summary["total_bins"])*100, 2)
+#     tc_summary["mad2_prop"] = round((tc_summary["mad2_bursts"]/tc_summary["total_bins"])*100, 2)
+#     tc_summary["iqr1_prop"] = round((tc_summary["iqr1_bursts"]/tc_summary["total_bins"])*100, 2)
+#     tc_summary["iqr2_prop"] = round((tc_summary["iqr2_bursts"]/tc_summary["total_bins"])*100, 2)
+#     tc_summary["logn1_prop"] = round((tc_summary["logn1_bursts"]/tc_summary["total_bins"])*100, 2)
+#     tc_summary["logn2_prop"] = round((tc_summary["logn2_bursts"]/tc_summary["total_bins"])*100, 2)
+#     return tc_summary
 
 def add_bg_colors(ax, lightning_data, color_type):
     """
@@ -341,6 +341,84 @@ def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type):
     plt.xticks(visible=False)
     plt.grid()
     plt.show()
+
+
+def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_type):
+    cyclone_name = storm_names.filter(pl.col("storm_code") == cyclone_id)["storm_name"].item()
+    df_cyclone = processed[processed['storm_code'] == cyclone_id]
+    lightning_data = innercore_data.filter(pl.col("storm_code") == cyclone_id).to_pandas()
+
+    quadrants = ["DL", "DR", "UL", "UR"]
+    fig, axes = plt.subplots(2, 2, figsize=(14, 12), sharex=True, sharey=True)
+    axes = axes.flatten()
+
+    for i, quad in enumerate(quadrants):
+        ax = axes[i]
+
+        # Filter data for this quadrant
+        df_quad = df_cyclone[df_cyclone["shear_quad"] == quad]
+        lightning_quad = lightning_data[lightning_data["shear_quad"] == quad]
+
+        # Plot lightning count
+        ax.plot(lightning_quad['time_bin'], lightning_quad['lightning_count'], label='Lightning Count', color='gray')
+        ax.set_title(f"{cyclone_name} ({cyclone_id}) - {quad}")
+        ax.set_xlabel("Time")
+        ax.set_ylabel("Lightning Count", color="gray")
+        ax.tick_params(axis='y', labelcolor="gray")
+
+        # Add pressure data (second y-axis)
+        ax2 = ax.twinx()
+        ax2.plot(lightning_quad['time_bin'], lightning_quad['pressure'], label='Pressure', color='#d16002')
+        ax2.set_ylabel("Pressure", color="#d16002")
+        ax2.tick_params(axis='y', labelcolor="#d16002")
+
+        # Add wind data (third y-axis)
+        ax3 = ax.twinx()
+        ax3.spines['right'].set_position(('outward', 50))
+        ax3.plot(lightning_quad['time_bin'], lightning_quad['knots'], label='Wind', color='blue')
+        ax3.set_ylabel("Wind", color="#0603a8")
+        ax3.tick_params(axis='y', labelcolor="#0603a8")
+
+        # Call background colors function
+        add_bg_colors(ax, lightning_quad, bg_type)
+
+        # Mark bursts using the overall storm data, not recalculated per quadrant
+        burst_mask_mad1 = df_cyclone['burst_mad1'] & (df_cyclone['shear_quad'] == quad)
+        burst_mask_mad2 = df_cyclone['burst_mad2'] & (df_cyclone['shear_quad'] == quad)
+        burst_mask_iqr1 = df_cyclone['burst_iqr1'] & (df_cyclone['shear_quad'] == quad)
+        burst_mask_iqr2 = df_cyclone['burst_iqr2'] & (df_cyclone['shear_quad'] == quad)
+        burst_mask_logn1 = df_cyclone['burst_logn1'] & (df_cyclone['shear_quad'] == quad)
+        burst_mask_logn2 = df_cyclone['burst_logn2'] & (df_cyclone['shear_quad'] == quad)
+
+        ax.scatter(df_cyclone['time_bin'][burst_mask_mad1],
+                   df_cyclone['lightning_count'][burst_mask_mad1],
+                   color='red', label='MAD - threshold1', s=50, marker='o', alpha=0.7)
+        ax.scatter(df_cyclone['time_bin'][burst_mask_mad2],
+                   df_cyclone['lightning_count'][burst_mask_mad2],
+                   color='yellow', label='MAD - threshold2', s=50, marker='o', alpha=0.7)
+
+        ax.scatter(df_cyclone['time_bin'][burst_mask_iqr1],
+                   df_cyclone['lightning_count'][burst_mask_iqr1],
+                   color='blue', label='IQR - threshold1', s=50, marker='x', alpha=0.7)
+        ax.scatter(df_cyclone['time_bin'][burst_mask_iqr2],
+                   df_cyclone['lightning_count'][burst_mask_iqr2],
+                   color='orange', label='IQR - threshold2', s=50, marker='x', alpha=0.7)
+
+        ax.scatter(df_cyclone['time_bin'][burst_mask_logn1],
+                   df_cyclone['lightning_count'][burst_mask_logn1],
+                   color='purple', label='Lognormal - 2 sigma', s=50, marker='^', alpha=0.7)
+        ax.scatter(df_cyclone['time_bin'][burst_mask_logn2],
+                   df_cyclone['lightning_count'][burst_mask_logn2],
+                   color='green', label='Lognormal - 3 sigma', s=50, marker='^', alpha=0.7)
+
+        ax.grid()
+
+    # Add a common legend for all plots
+    handles, labels = ax.get_legend_handles_labels()
+    fig.legend(handles, labels, loc='upper center', ncol=7, fontsize=8)
+    plt.tight_layout()
+    plt.show()
+
 
 
 def group_bins_category(dataset):
