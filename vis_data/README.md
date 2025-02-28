@@ -3,13 +3,11 @@ This folder contains the files used to power the visualizations in the Power BI 
 
 ### Data Schema
 
-#### basin_bursts_summary.csv
 
-#### basin_threshold_bursts.csv
+#### innercore_bursts.csv
+This dataset contains the bursts detected for the inner core data using the 6 threshold methods at the individual TC level. This dataset powers the marks on the dashboard denoting if a particular time bin had a burst of lightning.
 
-#### basin_threshold_tc_summary.csv
-
-#### tc_lightning_vis_data.csv !!need to rename to specify innercore
+#### innercore_lightning_data.csv
 This dataset provides the lightning count (in 30 minute bins), wind, and pressure data for the visualization for inner core lightning only. This dataset also provides the intensification category and current category used to color-code the background of the visualizations.
 
 | Column Name   | Data Type | Description |
@@ -37,9 +35,12 @@ This dataset provides the lightning count (in 30 minute bins), wind, and pressur
 | log_lightning_count | Float | log10 transformed lightning count |
 | Intensification_Category_3 | String | |
 
-#### tc_threshold.csv (should probably rename this)
-This dataset contains the bursts detected for the inner core data using the 6 threshold methods at the individual TC level. This dataset powers the marks on the dashboard denoting if a particular time bin had a burst of lightning.
 
-
-#### threshold_summary.csv
+#### innercore_threshold_summary.csv
 This dataset contains an aggregated summary of each TC's individual inner core lightning burst detection. Each TC has only one row in this dataset.
+
+#### rainband_bursts.csv
+need to fill in with schema and description
+#### rainband_lightning_data.csv
+
+#### rainband_threshold_summary.csv
