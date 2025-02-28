@@ -1,83 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Inner Core Lightning Threshold Analysis
-# In this notebook, we define the threshold for what constitutes a "lightning burst" in the inner core of a tropical cyclone.
-#
-# ### How do we define a burst of lightning?
-# We define a lightning burst based off the number of lightning instances in a 30-minute time bin.
-# We start by assuming the distribution of lightning in the inner core is Gaussian.
-#
-# *We look at each basin separately. Below are the basin codes:
-# * ATL - Atlantic Ocean basin
-# * CPAC -
-# * EPAC - Eastern Pacific basin
-# * IO - Indian Ocean basin
-# * SHEM - Southern Hemisphere basin
-# * WPAC - Western North Pacific basin
-#
-# ## Code
-# ### Import Libraries and Files
-# Let's start by importing necessary libraries and files. The inner core dataset is created in the `data_processing.ipynb` notebook as `innercore_timebin_joined.csv`.
-
-# In[1]:
-
-
 import pandas as pd
 import numpy as np
 import polars as pl
 import matplotlib.pyplot as plt
 from scipy.stats import median_abs_deviation
 import matplotlib.patches as mpatches
-
-
-# import data from csv file
-innercore_data = pl.read_csv("../data_pipeline/data/innercore_timebin_joined.csv")
-innercore_data = innercore_data.with_columns(
-    pl.col("time_bin").str.strptime(pl.Datetime).alias("time_bin"),
-    pl.col("storm_code").str.extract(r"^(.*?)_", 1).alias("basin"),
-    pl.col("lightning_count").log1p().alias("log_lightning_count"),
-    pl.when(pl.col("pressure") == 0)
-    .then(None)  # Replace 0 with None -> 0 is not possible, treat these as null but don't remove row bc the wind speed value is valid
-    .otherwise(pl.col("pressure"))
-    .alias("pressure")  # Keep the column name as "pressure"
-)
-innercore_data = innercore_data.with_columns(
-    pl.when(pl.col("TC_Category") == "Unidentified")
-    .then(pl.lit("0")) # Replace "unidentified" with 0 for current category
-    .otherwise(pl.col("TC_Category"))
-    .alias("TC_Category")
-)
-innercore_data = innercore_data.rename({"Intensification_Category":"Intensification_Category_5", "TC_Category":"Current_Category"})
-innercore_data.head()
-
-
-# We map the intensification bins into 3, combining the rapidly weakening and weakening bins, and the rapidly intensifying and intensifying bins.
-
-
-# Mapping intensification bins into 3 category instead of 5
-category_mapping = {
-    "Rapidly Weakening": "Weakening",
-    "Weakening": "Weakening",
-    "Neutral": "Neutral",
-    "Intensifying": "Intensifying",
-    "Rapidly Intensifying": "Intensifying"
-}
-
-# Apply mapping to create new column
-innercore_data = innercore_data.with_columns(
-    innercore_data["Intensification_Category_5"].replace(category_mapping).alias("Intensification_Category_3")
-)
-
-innercore_data.head()
-
-
-# In[4]:
-
-
-# Create dataframe for filtering later
-storm_names = innercore_data[["storm_code", "storm_name"]].unique()
-
 
 # ### Functions
 #
@@ -347,9 +276,16 @@ def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_typ
     df_cyclone = processed[processed['storm_code'] == cyclone_id]
     lightning_data = innercore_data.filter(pl.col("storm_code") == cyclone_id).to_pandas()
 
-    quadrants = ["DL", "DR", "UL", "UR"]
-    fig, axes = plt.subplots(2, 2, figsize=(14, 12), sharex=True, sharey=True)
+    quadrants = ["UL", "DL", "UR", "DR"]
+    fig, axes = plt.subplots(2, 2, figsize=(14, 12), sharey=True, sharex=False) #sharex=True,
     axes = axes.flatten()
+
+    # Create empty lists to store legend handles and labels
+    all_handles = []
+    all_labels = []
+
+    # Create a set to track labels we've added already (to prevent duplicates)
+    added_labels = set()
 
     for i, quad in enumerate(quadrants):
         ax = axes[i]
@@ -364,6 +300,7 @@ def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_typ
         ax.set_xlabel("Time")
         ax.set_ylabel("Lightning Count", color="gray")
         ax.tick_params(axis='y', labelcolor="gray")
+        ax.xaxis.set_tick_params(rotation=45)
 
         # Add pressure data (second y-axis)
         ax2 = ax.twinx()
@@ -379,7 +316,7 @@ def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_typ
         ax3.tick_params(axis='y', labelcolor="#0603a8")
 
         # Call background colors function
-        add_bg_colors(ax, lightning_quad, bg_type)
+        legend_patches = add_bg_colors(ax, lightning_quad, bg_type)
 
         # Mark bursts using the overall storm data, not recalculated per quadrant
         burst_mask_mad1 = df_cyclone['burst_mad1'] & (df_cyclone['shear_quad'] == quad)
@@ -412,9 +349,38 @@ def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_typ
 
         ax.grid()
 
+        # Capture the handles and labels for the current axis
+        handles, labels = ax.get_legend_handles_labels()
+
+        # Filter out duplicate labels
+        for handle, label in zip(handles, labels):
+            if label not in added_labels:
+                all_handles.append(handle)
+                all_labels.append(label)
+                added_labels.add(label)
+
+        # Add the legend patches from background color function
+        for patch in legend_patches:
+            label = patch.get_label()
+            if label not in added_labels:  # Avoid duplicates
+                all_handles.append(patch)
+                all_labels.append(label)
+                added_labels.add(label)
+
+
     # Add a common legend for all plots
-    handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='upper center', ncol=7, fontsize=8)
+    fig.legend(all_handles, all_labels, loc='upper center', ncol=7, fontsize=10, bbox_to_anchor=(0.5, 1.05))
+    # # Add a common legend for all plots
+    # handles, labels = ax.get_legend_handles_labels()
+    # # Call bg colors function
+    # legend_patches = add_bg_colors(ax, lightning_data, bg_type)
+    # # fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, 1.05), ncol=7, fontsize=12)
+    # # Combine both legends
+    # all_handles = handles + custom_patches  # Merge scatter plot and custom patches
+    # all_labels = labels + [p.get_label() for p in custom_patches]
+
+    # # Add the combined legend at the top
+    # fig.legend(all_handles, all_labels, loc='upper center', ncol=4, fontsize=12, bbox_to_anchor=(0.5, 1.05))
     plt.tight_layout()
     plt.show()
 
