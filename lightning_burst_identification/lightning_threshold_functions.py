@@ -207,6 +207,35 @@ def add_bg_colors(ax, lightning_data, color_type):
     return legend_patches  # Return legend handles
 
 
+def plot_bursts(ax, df, quad=None):
+    burst_columns = {
+        'mad1': ['burst_mad1', 'red', 'MAD', '1', 'o'],
+        'mad2': ['burst_mad2', 'yellow', 'MAD', '2', 'o'],
+        'iqr1': ['burst_iqr1', 'blue', 'IQR','1', 'x'],
+        'iqr2': ['burst_iqr2', 'orange', 'IQR','2', 'x'],
+        'logn1': ['burst_logn1', 'purple', 'Lognormal','1', '^'],
+        'logn2': ['burst_logn2', 'green', 'Lognormal','2', '^']
+    }
+    if quad is not None:
+        burst_masks = {
+        "mad1": df['burst_mad1'] & (df['shear_quad'] == quad),
+        "mad2": df['burst_mad2'] & (df['shear_quad'] == quad),
+        "iqr1": df['burst_iqr1'] & (df['shear_quad'] == quad),
+        "iqr2": df['burst_iqr2'] & (df['shear_quad'] == quad),
+        "logn1": df['burst_logn1'] & (df['shear_quad'] == quad),
+        "logn2": df['burst_logn2'] & (df['shear_quad'] == quad)
+        }
+
+    # Mark bursts detected by each method
+    for key, item in burst_columns.items():
+        if quad is not None:
+            col_mask = burst_masks[key]
+        else:
+            col_mask = df[item[0]]
+        ax.scatter(df['time_bin'][col_mask],
+                    df['lightning_count'][col_mask],
+                    color=item[1], label=f'{item[2]} Detected Burst - threshold {item[3]}', s=50, marker=item[4], alpha=0.7)
+
 def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type):
     cyclone_name = storm_names.filter(pl.col("storm_code") == cyclone_id)["storm_name"].item()
     df_cyclone = processed[processed['storm_code'] == cyclone_id]
@@ -238,29 +267,8 @@ def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type):
     # Call bg colors function
     legend_patches = add_bg_colors(ax1, lightning_data, bg_type)
 
-    # Mark bursts detected by MAD
-    ax1.scatter(df_cyclone['time_bin'][df_cyclone['burst_mad1']],
-                df_cyclone['lightning_count'][df_cyclone['burst_mad1']],
-                color='red', label='MAD Detected Burst -threshold1', s=50, marker='o', alpha=0.7)
-    ax1.scatter(df_cyclone['time_bin'][df_cyclone['burst_mad2']],
-                df_cyclone['lightning_count'][df_cyclone['burst_mad2']],
-                color='yellow', label='MAD Detected Burst - threshold2', s=50, marker='o', alpha=0.7)
-
-    # Mark bursts detected by IQR
-    ax1.scatter(df_cyclone['time_bin'][df_cyclone['burst_iqr1']],
-                df_cyclone['lightning_count'][df_cyclone['burst_iqr1']],
-                color='blue', label='IQR Detected Burst - threshold1', s=50, marker='x', alpha=0.7)
-    ax1.scatter(df_cyclone['time_bin'][df_cyclone['burst_iqr2']],
-                df_cyclone['lightning_count'][df_cyclone['burst_iqr2']],
-                color='orange', label='IQR Detected Burst - threshold2', s=50, marker='x', alpha=0.7)
-
-    # Mark bursts detected by lognormal threshold
-    ax1.scatter(df_cyclone['time_bin'][df_cyclone['burst_logn1']],
-                df_cyclone['lightning_count'][df_cyclone['burst_logn1']],
-                color='purple', label='Lognormal Detected Burst - 2 sigma', s=50, marker='^', alpha=0.7)
-    ax1.scatter(df_cyclone['time_bin'][df_cyclone['burst_logn2']],
-                df_cyclone['lightning_count'][df_cyclone['burst_logn2']],
-                color='green', label='Lognormal Detected Burst - 3 sigma', s=50, marker='^', alpha=0.7)
+    # Call bursts function
+    plot_bursts(ax1, df_cyclone)
 
     plt.xlabel('Time')
     plt.title(f'Lightning Burst Detection for {cyclone_name} ({cyclone_id})')
@@ -319,33 +327,7 @@ def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_typ
         legend_patches = add_bg_colors(ax, lightning_quad, bg_type)
 
         # Mark bursts using the overall storm data, not recalculated per quadrant
-        burst_mask_mad1 = df_cyclone['burst_mad1'] & (df_cyclone['shear_quad'] == quad)
-        burst_mask_mad2 = df_cyclone['burst_mad2'] & (df_cyclone['shear_quad'] == quad)
-        burst_mask_iqr1 = df_cyclone['burst_iqr1'] & (df_cyclone['shear_quad'] == quad)
-        burst_mask_iqr2 = df_cyclone['burst_iqr2'] & (df_cyclone['shear_quad'] == quad)
-        burst_mask_logn1 = df_cyclone['burst_logn1'] & (df_cyclone['shear_quad'] == quad)
-        burst_mask_logn2 = df_cyclone['burst_logn2'] & (df_cyclone['shear_quad'] == quad)
-
-        ax.scatter(df_cyclone['time_bin'][burst_mask_mad1],
-                   df_cyclone['lightning_count'][burst_mask_mad1],
-                   color='red', label='MAD - threshold1', s=50, marker='o', alpha=0.7)
-        ax.scatter(df_cyclone['time_bin'][burst_mask_mad2],
-                   df_cyclone['lightning_count'][burst_mask_mad2],
-                   color='yellow', label='MAD - threshold2', s=50, marker='o', alpha=0.7)
-
-        ax.scatter(df_cyclone['time_bin'][burst_mask_iqr1],
-                   df_cyclone['lightning_count'][burst_mask_iqr1],
-                   color='blue', label='IQR - threshold1', s=50, marker='x', alpha=0.7)
-        ax.scatter(df_cyclone['time_bin'][burst_mask_iqr2],
-                   df_cyclone['lightning_count'][burst_mask_iqr2],
-                   color='orange', label='IQR - threshold2', s=50, marker='x', alpha=0.7)
-
-        ax.scatter(df_cyclone['time_bin'][burst_mask_logn1],
-                   df_cyclone['lightning_count'][burst_mask_logn1],
-                   color='purple', label='Lognormal - 2 sigma', s=50, marker='^', alpha=0.7)
-        ax.scatter(df_cyclone['time_bin'][burst_mask_logn2],
-                   df_cyclone['lightning_count'][burst_mask_logn2],
-                   color='green', label='Lognormal - 3 sigma', s=50, marker='^', alpha=0.7)
+        plot_bursts(ax, df_cyclone, quad)
 
         ax.grid()
 
@@ -370,17 +352,6 @@ def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_typ
 
     # Add a common legend for all plots
     fig.legend(all_handles, all_labels, loc='upper center', ncol=7, fontsize=10, bbox_to_anchor=(0.5, 1.05))
-    # # Add a common legend for all plots
-    # handles, labels = ax.get_legend_handles_labels()
-    # # Call bg colors function
-    # legend_patches = add_bg_colors(ax, lightning_data, bg_type)
-    # # fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, 1.05), ncol=7, fontsize=12)
-    # # Combine both legends
-    # all_handles = handles + custom_patches  # Merge scatter plot and custom patches
-    # all_labels = labels + [p.get_label() for p in custom_patches]
-
-    # # Add the combined legend at the top
-    # fig.legend(all_handles, all_labels, loc='upper center', ncol=4, fontsize=12, bbox_to_anchor=(0.5, 1.05))
     plt.tight_layout()
     plt.show()
 
