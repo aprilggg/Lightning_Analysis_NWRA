@@ -227,14 +227,14 @@ def plot_bursts(ax, df, quad=None):
         }
 
     # Mark bursts detected by each method
-    for key, item in burst_columns.items():
+    for key, (col, color, method, threshold, marker) in burst_columns.items():
         if quad is not None:
             col_mask = burst_masks[key]
         else:
-            col_mask = df[item[0]]
+            col_mask = df[col]
         ax.scatter(df['time_bin'][col_mask],
                     df['lightning_count'][col_mask],
-                    color=item[1], label=f'{item[2]} Detected Burst - threshold {item[3]}', s=50, marker=item[4], alpha=0.7)
+                    color=color, label=f'{method} Detected Burst - threshold {threshold}', s=50, marker=marker, alpha=0.7)
 
 def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type):
     cyclone_name = storm_names.filter(pl.col("storm_code") == cyclone_id)["storm_name"].item()
