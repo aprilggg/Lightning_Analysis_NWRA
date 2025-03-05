@@ -27,7 +27,7 @@ The notebooks in this directory include:
     - identifies lightning bursts at individual TC level and sorts them into shear quadrants
 
 This directory also includes:
-**`data/`**
+- **`data/`**
     - innercore_atl_basin_bursts_summary.csv
     - innercore_atl_basin_threshold_bursts.csv
     - innercore_atl_basin_threshold_tc_summary.csv
