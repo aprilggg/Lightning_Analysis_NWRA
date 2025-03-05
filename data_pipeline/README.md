@@ -15,13 +15,13 @@ The notebooks should be executed in the following order:
     - bin lightning events into 30-minute bins
     - join lightning bins with TC wind and pressure data
     - calculate current category and intensification change
-4. **`shear_data.ipynb`**
+4. **`rainband_data.ipynb`**
     - combine individual TC shear data files into one consolidated file
     - calculate shear angle and quadrant for rainband lightning events
     - create timebins for rainband data
     - join rainband WWLLN data to trackfiles
 
-This directory also includes a `data/` directory containing the outputted intermediate files from the data pipeline used in subsequent analysis.
+This directory also includes a `intermediate_data/` directory containing the outputted intermediate files from the data pipeline used in subsequent analysis.
 
 ### Code Requirements
 The data pipeline notebooks require the following libraries not built in to Python:
@@ -35,20 +35,12 @@ The data pipeline notebooks require the following libraries not built in to Pyth
 
 The code in this directory requires a Google account with about 9GB of free space, as well as a Google Cloud project to use the [Google Drive API](https://developers.google.com/drive/api/guides/about-sdk). Detailed instructions on setup and references can be found in the `data_upload.ipynb` notebook.
 
-### Output Files
-- `Combined_Reduced_Trackfile.txt`
-- `Combined_WWLLN_Locations.txt`
-- `Filtered_Reduced_Trackfile.csv`
-- `Filtered_WWLLN_Locations.txt`
-- `WWLLN_innercore.csv`
-- `WWLLN_rainband.csv`
-- `WWLLN_innercore_w_time.csv`
-- `WWLLN_innercore_timebin_count.csv`
-- `WWLLN_rainband_timebin_count.csv`
-- `WWLLN_rainband_w_time.csv`
-- `innercore_joined.csv`*
-- `innercore_joined_w_time.csv`
-- `rainband_joined.csv`*
-- `rainband_joined_w_time.csv`
+### Output Files - add schema?
+These files are created and outputted to the `data/` directory for use in subsequent analysis.
+- `filtered_tc_list.csv`
+- `innercore_timebin_joined.csv`*
+- `rainband_shear_timebin_joined.csv`*
+- `rainband_timebin_joined.csv`
+- `unbinned_shear_data.txt` - not uploaded to Github due to size
 
 *denotes files used in the subsequent lightning burst threshold analysis.
