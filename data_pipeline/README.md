@@ -23,7 +23,7 @@ The notebooks should be executed in the following order:
     - create timebins for rainband data
     - join rainband WWLLN data to trackfiles
 
-This directory also includes a `intermediate_data/` directory containing the outputted intermediate files from the data pipeline used in subsequent analysis.
+This directory also includes a `intermediate_data/` directory containing the outputted intermediate files from the data pipeline used in subsequent data pipeline activities. Files used for subsequent analysis are in the `data/` folder.
 
 ### Code Requirements
 The data pipeline notebooks require the following libraries not built in to Python:
@@ -39,6 +39,7 @@ The code in this directory requires a Google account with about 9GB of free spac
 We use Google Drive as a way to host our data files online to facilitate collaboration amongst our group members.
 
 This pipeline assumes that the raw data is contained in a folder structure like the one below, where each TC's data is contained in a separate file:
+```
 .
 ├── year
 |   └── basin
@@ -46,8 +47,9 @@ This pipeline assumes that the raw data is contained in a folder structure like 
 |           └── trackfile
 |           └── WWLLN data
 |           └── shear file
-
+```
 example:
+```
 .
 ├── 10
 |   └── ATL
@@ -55,6 +57,7 @@ example:
 |           └── ATL_10_1_Trackfile.txt
 |           └── ATL_10_1_WWLLN_Locations.txt
 |           └── ATL_10_1_Intensity_Shear.mat
+```
 
 We also assume that each file contains the storm code formatted as basin_year_stormnumber. We look for specific file name patterns when extracting and combining data files.
 
