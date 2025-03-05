@@ -1,8 +1,15 @@
 ## Analysis Data
 This folder contains the files used to power the visualizations in the Power BI dashboard and the statistical analyses in the `intensification_analysis` directory. All data files in this directory are created using the two notebooks in the `lightning_burst_identification` directory.
 
-### Data Schema
+### Data Files and Schema
+* [innercore_bursts.csv](#innercore-bursts)
+* [innercore_lightning_data.csv](#innercore-lightning)
+* [innercore_threshold_summary.csv](#innercore-summary)
+* [rainband_bursts.csv](#rainband-bursts)
+* [rainband_lightning_data.csv](#rainband-lightning)
+* [rainband_threshold_summary.csv](#rainband-summary)
 
+<a id="innercore-bursts"></a>
 
 #### innercore_bursts.csv
 This dataset contains the bursts detected for the inner core data using the 6 threshold methods at the individual TC level. This dataset powers the marks on the dashboard denoting if a particular time bin had a burst of lightning. Note that this dataset only contains time bins with lightning counts greater than 0.
@@ -44,6 +51,8 @@ This dataset contains the bursts detected for the inner core data using the 6 th
 | logn1_threshold | Float | log10 transformed threshold for LOGN1 method burst |
 | logn2_threshold | Float | log10 transformed threshold for LOGN2 method burst |
 
+<a id="innercore-lightning"></a>
+
 #### innercore_lightning_data.csv
 This dataset provides the lightning count (in 30 minute bins), wind, and pressure data for the visualization for inner core lightning only. This dataset also provides the intensification category and current category used to color-code the background of the visualizations.
 
@@ -73,6 +82,8 @@ This dataset provides the lightning count (in 30 minute bins), wind, and pressur
 | Intensification_Category_3 | String | combines rapidly intensifying with intensifying, rapidly weakening with weakening |
 
 
+<a id="innercore-summary"></a>
+
 #### innercore_threshold_summary.csv
 This dataset contains an aggregated summary of each TC's individual inner core lightning burst detection. Each TC has only one row in this dataset.
 
@@ -99,6 +110,8 @@ This dataset contains an aggregated summary of each TC's individual inner core l
 | iqr2_prop | Float | percent of time bins detected as lightning burst using IQR2 method |
 | logn1_prop | Float | percent of time bins detected as lightning burst using LOGN1 method |
 | logn2_prop | Float | percent of time bins detected as lightning burst using LOGN2 method |
+
+<a id="rainband-bursts"></a>
 
 #### rainband_bursts.csv
 This dataset contains the bursts detected for the rainband data using the 6 threshold methods at the individual TC level. This dataset powers the marks on the dashboard denoting if a particular time bin had a burst of lightning. Note that this dataset splits each timebin into the 4 shear quadrants - UR, UL, DR, DL and only contains time bins with lightning counts greater than 0.
@@ -142,6 +155,8 @@ This dataset contains the bursts detected for the rainband data using the 6 thre
 | logn2_threshold | Float | log10 transformed threshold for LOGN2 method burst |
 
 
+<a id="rainband-lightning"></a>
+
 #### rainband_lightning_data.csv
 This dataset provides the lightning count (in 30 minute bins), wind, and pressure data for the visualization for rainband lightning only. This dataset also provides the intensification category and current category used to color-code the background of the visualizations.
 
@@ -171,6 +186,8 @@ This dataset provides the lightning count (in 30 minute bins), wind, and pressur
 | log_lightning_count | Float | log10 transformed lightning count |
 | Intensification_Category_3 | String | combines rapidly intensifying with intensifying, rapidly weakening with weakening |
 
+
+<a id="rainband-summary"></a>
 
 #### rainband_threshold_summary.csv
 This dataset contains an aggregated summary of each TC's individual rainband lightning burst detection. Each TC will have up to 4 rows in this dataset, one per shear quadrant.
