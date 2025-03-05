@@ -72,3 +72,13 @@ The `lightning_threshold_innercore.ipynb` and `lightning_threshold_rainband.ipyn
 
 ### Output Files
 The code in this directory outputs data files into both the `lightning_burst_identification/data/` and `analysis_data/` directories. Basin-level threshold evaluations are in the `lightning_burst_identification/data/` folder, and individual-level threshold evaluation datasets are in the `analysis_data/` folder, later used in both the dashboard and TC intensification statistical analysis.
+
+**`analysis_data/`**
+* innercore_bursts.csv
+* innercore_lightning_data.csv
+* innercore_threshold_summary.csv
+* rainband_bursts.csv
+* rainband_lightning_data.csv
+* rainband_threshold_summary.csv
+
+Schema details for these files can be found in `analysis_data/README.md`
