@@ -1,4 +1,4 @@
-## Visualization Data
+## Analysis Data
 This folder contains the files used to power the visualizations in the Power BI dashboard and the statistical analyses in the `intensification_analysis` directory.
 
 ### Data Schema

@@ -23,6 +23,8 @@ UW MSDS Capstone Project with Northwest Research Associates
 <a id="directory-overview"></a>
 
 ## Directory Overview
+**analysis_data** - contains data files used in the Power BI dashboard and intensification analysis, files created from the lightning burst identification code
+
 **data_pipeline** - contains notebooks used to upload, clean, process, and create data files used in the analysis portion of this project
 
 **exploratory_analysis** - contains notebooks as well as visualizations created in the exploratory analysis portion of this project
@@ -31,11 +33,17 @@ UW MSDS Capstone Project with Northwest Research Associates
 
 **lightning_burst_identification** - contains notebooks, datasets, and visualizations created in the statistical identification of inner core and rainband lightning bursts at both the individual TC and basin levels
 
-**vis_data** - contains data files used in the Power BI dashboard
-
 ### Directory Structure
 ```
 .
+├── analysis_data
+|   └── README.md
+|   └── innercore_lightning_data.csv
+|   └── innercore_bursts.csv
+|   └── innercore_threshold_summary.csv
+|   └── rainband_lightning_data.csv
+|   └── rainband_bursts.csv
+|   └── rainband_threshold_summary.csv
 ├── data_pipeline
 |   └── data
 |       └── ...
@@ -61,14 +69,6 @@ UW MSDS Capstone Project with Northwest Research Associates
 |   └── lightning_threshold_functions.py
 |   └── lightning_threshold_innercore.ipynb
 |   └── lightning_threshold_rainband.ipynb
-├── vis_data
-|   └── README.md
-|   └── innercore_lightning_data.csv
-|   └── innercore_bursts.csv
-|   └── innercore_threshold_summary.csv
-|   └── rainband_lightning_data.csv
-|   └── rainband_bursts.csv
-|   └── rainband_threshold_summary.csv
 ├── LICENSE
 └── README.md
 ```
