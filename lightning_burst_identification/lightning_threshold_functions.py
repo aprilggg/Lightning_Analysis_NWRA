@@ -95,8 +95,12 @@ def apply_individual_thresholds(df):
 #     return bursts
 
 # Function used to aggregate results dataframe
-def create_tc_summary(processed):
-    tc_summary = processed.groupby(["storm_code"]).agg(
+def create_tc_summary(processed, rainband=None):
+    if rainband is not None:
+        grouping = ["storm_code", "shear_quad"]
+    else:
+        grouping = ["storm_code"]
+    tc_summary = processed.groupby(grouping).agg(
         mad1_bursts=('burst_mad1', 'sum'),
         mad2_bursts=('burst_mad2', 'sum'),
         mad1_threshold=('mad1_threshold', 'max'),
