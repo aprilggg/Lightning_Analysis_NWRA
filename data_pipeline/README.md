@@ -9,6 +9,7 @@ The notebooks should be executed in the following order:
 2. **`data_file_cleaning.ipynb`**
     - clean up duplicate .txt files in Google Drive folder
 3. **`data_processing.ipynb`**
+    - combine individual files from Google Drive folder into one
     - parse tropical cyclone names and IDs
     - create combined files for WWLLN lightning and TC trackfile datasets
     - calculate lightning distances and filter TCs by category
@@ -16,6 +17,7 @@ The notebooks should be executed in the following order:
     - join lightning bins with TC wind and pressure data
     - calculate current category and intensification change
 4. **`rainband_data.ipynb`**
+    - looks for shear data files stored in USB
     - combine individual TC shear data files into one consolidated file
     - calculate shear angle and quadrant for rainband lightning events
     - create timebins for rainband data
@@ -34,6 +36,27 @@ The data pipeline notebooks require the following libraries not built in to Pyth
 - numpy
 
 The code in this directory requires a Google account with about 9GB of free space, as well as a Google Cloud project to use the [Google Drive API](https://developers.google.com/drive/api/guides/about-sdk). Detailed instructions on setup and references can be found in the `data_upload.ipynb` notebook.
+We use Google Drive as a way to host our data files online to facilitate collaboration amongst our group members.
+
+This pipeline assumes that the raw data is contained in a folder structure like the one below, where each TC's data is contained in a separate file:
+.
+├── year
+|   └── basin
+|       └── storm number
+|           └── trackfile
+|           └── WWLLN data
+|           └── shear file
+
+example:
+.
+├── 10
+|   └── ATL
+|       └── 1
+|           └── ATL_10_1_Trackfile.txt
+|           └── ATL_10_1_WWLLN_Locations.txt
+|           └── ATL_10_1_Intensity_Shear.mat
+
+We also assume that each file contains the storm code formatted as basin_year_stormnumber. We look for specific file name patterns when extracting and combining data files.
 
 ### Output Files - add schema?
 These files are created and outputted to the `data/` directory for use in subsequent analysis.
