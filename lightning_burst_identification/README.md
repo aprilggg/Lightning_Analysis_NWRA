@@ -26,26 +26,7 @@ The notebooks in this directory include:
     - applies threshold calculation, TC plotting functions to rainband dataset
     - identifies lightning bursts at individual TC level and sorts them into shear quadrants
 
-This directory also includes:
-- **`data/`**
-    - innercore_atl_basin_bursts_summary.csv
-    - innercore_atl_basin_threshold_bursts.csv
-    - innercore_atl_basin_threshold_tc_summary.csv
-    - innercore_basin_bursts_summary.csv
-    - innercore_basin_threshold_bursts.csv
-    - innercore_basin_threshold_tc_summary.csv
-    - innercore_epac_basin_bursts_summary.csv
-    - innercore_epac_basin_threshold_bursts.csv
-    - innercore_epac_basin_threshold_tc_summary.csv
-    - innercore_io_basin_bursts_summary.csv
-    - innercore_io_basin_threshold_bursts.csv
-    - innercore_io_basin_threshold_tc_summary.csv
-    - innercore_shem_basin_bursts_summary.csv
-    - innercore_shem_basin_threshold_bursts.csv
-    - innercore_shem_basin_threshold_tc_summary.csv
-    - innercore_wpac_basin_bursts_summary.csv
-    - innercore_wpac_basin_threshold_bursts.csv
-    - innercore_wpac_basin_threshold_tc_summary.csv
+This directory also includes basin-level lightning burst evaluation data in the `data/` folder not used in subsequent analysis. Files either contain just one basin (noted in file name), or contain all basins (no basin in file name).
 
 <a id="methods"></a>
 
