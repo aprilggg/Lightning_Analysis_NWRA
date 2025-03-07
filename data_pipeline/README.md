@@ -1,5 +1,12 @@
 # Data Pipeline
 
+* [About Directory](#about)
+* [Code Requirements](#requirements)
+* [Output Files](#outputs)
+
+
+<a id="about"></a>
+
 ### About Directory
 The Juptyer Notebook files in this directory are used to upload data to Google Drive, clean up duplicate files, and create combined files for use in the analysis portion of this project.
 
@@ -25,6 +32,8 @@ The notebooks should be executed in the following order:
 
 This directory also includes a `intermediate_data/` directory containing the outputted intermediate files from the data pipeline used in subsequent data pipeline activities. Files used for subsequent analysis are in the `data/` folder.
 
+<a id="requirements"></a>
+
 ### Code Requirements
 The data pipeline notebooks require the following libraries not built in to Python:
 - pydrive
@@ -35,7 +44,7 @@ The data pipeline notebooks require the following libraries not built in to Pyth
 - polars
 - numpy
 
-The code in this directory requires a Google account with about 9GB of free space, as well as a Google Cloud project to use the [Google Drive API](https://developers.google.com/drive/api/guides/about-sdk). Detailed instructions on setup and references can be found in the `data_upload.ipynb` notebook.
+The code in this directory requires a Google account with about 9GB of free space, as well as a Google Cloud project to use the [Google Drive API](https://developers.google.com/drive/api/guides/about-sdk). Detailed instructions on setup and references can be found in the [data_upload.ipynb](/data_upload.ipynb) notebook.
 We use Google Drive as a way to host our data files online to facilitate collaboration amongst our group members.
 
 This pipeline assumes that the raw data is contained in a folder structure like the one below, where each TC's data is contained in a separate file:
@@ -60,6 +69,8 @@ example:
 ```
 
 We also assume that each file contains the storm code formatted as basin_year_stormnumber. We look for specific file name patterns when extracting and combining data files.
+
+<a id="outputs"></a>
 
 ### Output Files - add schema?
 These files are created and outputted to the `data/` directory for use in subsequent analysis.

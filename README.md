@@ -49,6 +49,10 @@ We use the following standards to categorize intensification stage and category 
 | 4 | 113-136 kt |
 | 5 | 137 kt or higher |
 
+About shear - only use for rainband bc rainband lightning tends to occur in a specific quadrant, shear quadrants behave differently
+
+** insert the graphic here for the shear quad definition + formulas
+
 <a id="directory-overview"></a>
 
 ## Directory Overview
