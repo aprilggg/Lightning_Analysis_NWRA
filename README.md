@@ -56,7 +56,10 @@ About shear - only use for rainband bc rainband lightning tends to occur in a sp
 <a id="directory-overview"></a>
 
 ## Directory Overview
-**analysis_data** - contains data files used in the Power BI dashboard and intensification analysis, files created from the lightning burst identification code
+
+Intermediate files created and too large to upload to Github can be found here: [Google Drive]() **fill in link
+
+**analysis_data** - contains data files used in the Power BI dashboard and intensification analysis created from the lightning burst identification code
 
 **data_pipeline** - contains notebooks used to upload, clean, process, and create data files used in the analysis portion of this project
 
