@@ -1,12 +1,9 @@
 # Lightning-Analysis
 UW MSDS Capstone Project with Northwest Research Associates
 
-<a id="objective"></a>
-
-## Objective
-
 ## Table of Contents
 * [Objective](#objective)
+* [Background Information](#background)
 * [Directory Overview](#directory-overview)
 * [Deliverables](#deliverables) - need a better name for this... process?
 * [Dependencies](#dependencies)
@@ -19,6 +16,38 @@ UW MSDS Capstone Project with Northwest Research Associates
 | April Gao       | [aprilggg](https://github.com/aprilggg)|
 | Elaine Zhang     | [ezhang17](https://github.com/ezhang17)|
 | Janice Kim      | [ymkim814](https://github.com/ymkim814)|
+
+<a id="objective"></a>
+
+## Objective
+
+<a id="background"></a>
+
+## Background Information
+
+** flesh out later
+
+inner core defined as <100km of center, rainband defined as 200-400km
+
+We use the following standards to categorize intensification stage and category based off wind speed in knots.
+
+**Intensification Stage Bins**
+| Intensification Stage | Change in Winds (Knots) in 24 Hours (Jiang and Ramirez, 2013)|
+| --------------------- | ----------------------|
+| Rapidly Weakening | <-30 |
+| Weakening | -30 to -10 |
+| Neutral | -10 to 10 |
+| Intensifying | 10 to 30 |
+| Rapidly Intensifying | >30 |
+
+**TC Category Bins - Saffir-Simpson Hurricane Wind Scale**
+| TC Category | Sustained Winds (Knots) |
+|  ---------- | ------------|
+| 1 | 64-82 kt |
+| 2 | 83-95 kt |
+| 3 | 96-112 kt |
+| 4 | 113-136 kt |
+| 5 | 137 kt or higher |
 
 <a id="directory-overview"></a>
 
