@@ -86,6 +86,7 @@ We use the following standards to categorize intensification stage and category 
 |   └── basin_descriptive_analysis.ipynb
 |   └── exploratory_analysis.ipynb
 ├── intensification_analysis
+|   └── README.md
 |   └── innercore_burst_w_intensification.ipynb
 |   └── rainband_burst_w_intensification.ipynb
 ├── lightning_burst_identification
