@@ -34,10 +34,10 @@ This directory also includes basin-level lightning burst evaluation data in the 
 We log transform the lightning counts per time bin and then calculate a lightning burst threshold based off each storm's log-lightning count distribution. Note that thresholds are evaluated off the log-lightning count, and threshold numbers are also represented on the log scale. We do not include counts associated with wind speeds less than 40 knots, and we do not include time bins with 0 lightning counts in the calculation of our thresholds.
 
 In the lightning burst detection process, we use the following 6 threshold methods (referred to by the names in parentheses hereafter):
-- Mean Absolute Deviation - 4 MAD (**MAD1**)
+- Median Absolute Deviation - 4 MAD (**MAD1**)
     - This method sets the threshold to be 4 times the median absolute deviation above the median log-lightning count
     - Equation: threshold = median + 4 * MAD
-- Mean Absolute Deviation - 5 MAD (**MAD2**)
+- Median Absolute Deviation - 5 MAD (**MAD2**)
     - This method sets the threshold to be 5 times the median absolute deviation above the median log-lightning count
     - Equation: threshold = median + 5 * MAD
 - Interquartile Range - 1 IQR (**IQR1**)
