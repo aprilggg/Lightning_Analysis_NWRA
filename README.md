@@ -25,6 +25,8 @@ UW MSDS Capstone Project with Northwest Research Associates
 
 ## Background Information
 
+NWRA provided WWLLN and track data from 2010-2020, with 984 total TCs in the dataset. For this project, we only look at TCs of category 1 or higher (as defined by the Saffir-Simpson Hurricane Wind Scale provided below), leaving us with 479 TCs for the lightning burst evaluation.
+
 ** flesh out later
 
 inner core defined as <100km of center, rainband defined as 200-400km
@@ -53,6 +55,8 @@ About shear - only use for rainband bc rainband lightning tends to occur in a sp
 
 ** insert the graphic here for the shear quad definition + formulas
 
+<img src="shear_quadrant_graphic.png" width="200" height="200">
+
 <a id="directory-overview"></a>
 
 ## Directory Overview
@@ -61,7 +65,7 @@ Intermediate files created and too large to upload to Github can be found here: 
 
 **analysis_data** - contains data files used in the Power BI dashboard and intensification analysis created from the lightning burst identification code
 
-**data_pipeline** - contains notebooks used to upload, clean, process, and create data files used in the analysis portion of this project
+**data_pipeline** - contains notebooks used to upload, clean, process, filter, and create data files used in the analysis portion of this project
 
 **exploratory_analysis** - contains notebooks as well as visualizations created in the exploratory analysis portion of this project
 
