@@ -12,6 +12,8 @@ This dashboard requires Power BI Desktop and the following files from the [analy
 - `rainband_bursts.csv`
 - `rainband_lightning_data.csv`
 
+These files are created in the `lightning_threshold_innercore.ipynb` and `lightning_threshold_rainband.ipynb` notebooks in this folder.
+
 The Python visualizations in this dashboard require installation of Python and the following non-native Python libraries:
 - pandas
 - matplotlib

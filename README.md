@@ -107,6 +107,7 @@ Intermediate files created and too large to upload to Github can be found here: 
 |       └── ...
 |   └── README.md
 |   └── __init__.py
+|   └── dashboard_documentation.md
 |   └── lightning_burst_dashboard.pbix
 |   └── lightning_threshold_functions.py
 |   └── lightning_threshold_innercore.ipynb
