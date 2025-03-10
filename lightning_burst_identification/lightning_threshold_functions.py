@@ -7,11 +7,15 @@ import polars as pl
 import matplotlib.pyplot as plt
 from scipy.stats import median_abs_deviation
 import matplotlib.patches as mpatches
+import gc
 
-# ### Functions
-#
-# Below are the functions used to evaluate 6 different lightning burst thresholds at the individual TC level. We compare each TC's lightning to itself to identify a burst using the IQR, MAD, and Lognormal methods. The thresholds defined by each of these functions act as a standard for a lightning burst for that TC. If the count in the bin is more than the threshold, we mark it as a lightning burst. Note that we use log-transformed lightning counts in this analysis. We do not include data associated with current wind speeds less than 40 knots in this threshold analysis.
-#
+### Functions
+# Below are the functions used to evaluate 6 different lightning burst thresholds at the individual TC level.
+# We compare each TC's lightning to itself to identify a burst using the IQR, MAD, and Lognormal methods.
+# The thresholds defined by each of these functions act as a standard for a lightning burst for that TC.
+# If the count in the bin is more than the threshold, we mark it as a lightning burst.
+# Note that we use log-transformed lightning counts in this analysis.
+# We do not include data associated with current wind speeds less than 40 knots in this threshold analysis.
 # We also create functions to apply the thresholds and aggregate results, as well as functions used to plot individual TCs for analysis.
 
 
@@ -81,19 +85,6 @@ def apply_individual_thresholds(df):
     bursts.reset_index(drop=True, inplace=True)
     return bursts
 
-# Function to apply the 3 methods, 6 thresholds for individual TCs
-# def apply_individual_thresholds_quad(df):
-#     bursts = df.groupby(["storm_code", 'shear_quad']).apply(detect_bursts_iqr)
-#     bursts.reset_index(drop=True, inplace=True)
-#     bursts = bursts.groupby(["storm_code", 'shear_quad']).apply(detect_bursts_mad)
-#     bursts.reset_index(drop=True, inplace=True)
-#     bursts = bursts.groupby(["storm_code", 'shear_quad']).apply(detect_bursts_lognormal)
-#     bursts.reset_index(drop=True, inplace=True)
-#     # Reset index to keep data points in chronological order
-#     bursts.sort_values(by=["storm_code",  "time_bin", 'shear_quad'], inplace=True)
-#     bursts.reset_index(drop=True, inplace=True)
-#     return bursts
-
 # Function used to aggregate results dataframe
 def create_tc_summary(processed, rainband=None):
     if rainband is not None:
@@ -125,33 +116,6 @@ def create_tc_summary(processed, rainband=None):
     tc_summary["logn1_prop"] = round((tc_summary["logn1_bursts"]/tc_summary["total_bins"])*100, 2)
     tc_summary["logn2_prop"] = round((tc_summary["logn2_bursts"]/tc_summary["total_bins"])*100, 2)
     return tc_summary
-
-# def create_tc_summary_quad(processed):
-#     tc_summary = processed.groupby(["storm_code",'shear_quad']).agg(
-#         mad1_bursts=('burst_mad1', 'sum'),
-#         mad2_bursts=('burst_mad2', 'sum'),
-#         mad1_threshold=('mad1_threshold', 'max'),
-#         mad2_threshold=('mad2_threshold', 'max'),
-#         iqr1_bursts=('burst_iqr1', 'sum'),
-#         iqr2_bursts=('burst_iqr2', 'sum'),
-#         iqr1_threshold=('iqr1_threshold', 'max'),
-#         iqr2_threshold=('iqr2_threshold', 'max'),
-#         logn1_bursts=('burst_logn1', 'sum'),
-#         logn2_bursts=('burst_logn2', 'sum'),
-#         logn1_threshold=('logn1_threshold', 'max'),
-#         logn2_threshold=('logn2_threshold', 'max'),
-#         total_bins=('storm_code', 'count')
-#     )
-#     tc_summary.reset_index(drop=False, inplace=True)
-#     tc_summary.head(10)
-
-#     tc_summary["mad1_prop"] = round((tc_summary["mad1_bursts"]/tc_summary["total_bins"])*100, 2)
-#     tc_summary["mad2_prop"] = round((tc_summary["mad2_bursts"]/tc_summary["total_bins"])*100, 2)
-#     tc_summary["iqr1_prop"] = round((tc_summary["iqr1_bursts"]/tc_summary["total_bins"])*100, 2)
-#     tc_summary["iqr2_prop"] = round((tc_summary["iqr2_bursts"]/tc_summary["total_bins"])*100, 2)
-#     tc_summary["logn1_prop"] = round((tc_summary["logn1_bursts"]/tc_summary["total_bins"])*100, 2)
-#     tc_summary["logn2_prop"] = round((tc_summary["logn2_bursts"]/tc_summary["total_bins"])*100, 2)
-#     return tc_summary
 
 def add_bg_colors(ax, lightning_data, color_type):
     """
@@ -217,8 +181,8 @@ def plot_bursts(ax, df, quad=None):
         'mad2': ['burst_mad2', 'yellow', 'MAD', '2', 'o'],
         'iqr1': ['burst_iqr1', 'blue', 'IQR','1', 'x'],
         'iqr2': ['burst_iqr2', 'orange', 'IQR','2', 'x'],
-        'logn1': ['burst_logn1', 'purple', 'Lognormal','1', '^'],
-        'logn2': ['burst_logn2', 'green', 'Lognormal','2', '^']
+        'logn1': ['burst_logn1', 'purple', 'LOGN','1', '^'],
+        'logn2': ['burst_logn2', 'green', 'LOGN','2', '^']
     }
     if quad is not None:
         burst_masks = {
@@ -238,14 +202,15 @@ def plot_bursts(ax, df, quad=None):
             col_mask = df[col]
         ax.scatter(df['time_bin'][col_mask],
                     df['lightning_count'][col_mask],
-                    color=color, label=f'{method} Detected Burst - threshold {threshold}', s=50, marker=marker, alpha=0.7)
+                    color=color, label=f'{method}{threshold} Burst', s=50, marker=marker, alpha=0.7)
 
-def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type):
+def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type, show=True, save_path=None):
+    plt.close('all')
     cyclone_name = storm_names.filter(pl.col("storm_code") == cyclone_id)["storm_name"].item()
     df_cyclone = processed[processed['storm_code'] == cyclone_id]
     lightning_data = innercore_data.filter(pl.col("storm_code") == cyclone_id).to_pandas()
 
-    plt.figure(figsize=(10, 5))
+    #plt.figure(figsize=(10, 5))
 
     # Create first y-axis for lightning
     fig, ax1 = plt.subplots(figsize=(14, 8))
@@ -275,15 +240,28 @@ def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type):
     plot_bursts(ax1, df_cyclone)
 
     plt.xlabel('Time')
-    plt.title(f'Lightning Burst Detection for {cyclone_name} ({cyclone_id})')
-    ax1.legend(loc='upper left')
-    ax2.legend(handles=legend_patches, loc='center left')
+    plt.title(f'Lightning Burst Detection for {cyclone_name} ({cyclone_id})', fontsize=14)
+    ax1.legend(loc='upper left', fontsize=12)
+    ax2.legend(handles=legend_patches, loc='center left', fontsize=12)
     plt.xticks(visible=False)
     plt.grid()
-    plt.show()
+
+    # Save the figure if save_path is provided
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close('all')  # Close the figure after saving to prevent it from displaying
+
+    # Show only if explicitly requested
+    elif show:
+        plt.show()
+    # Ensure figure is closed after use
+    plt.close(fig)  # Close the specific figure
+    plt.close('all')  # Close any remaining figures
+    gc.collect()  # Force garbage collection to free memory
 
 
-def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_type):
+def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_type, show=True, save_path=None):
+    plt.close('all')
     cyclone_name = storm_names.filter(pl.col("storm_code") == cyclone_id)["storm_name"].item()
     df_cyclone = processed[processed['storm_code'] == cyclone_id]
     lightning_data = innercore_data.filter(pl.col("storm_code") == cyclone_id).to_pandas()
@@ -355,9 +333,21 @@ def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_typ
 
 
     # Add a common legend for all plots
-    fig.legend(all_handles, all_labels, loc='upper center', ncol=7, fontsize=10, bbox_to_anchor=(0.5, 1.05))
+    fig.legend(all_handles, all_labels, loc='upper center', ncol=7, fontsize=12, bbox_to_anchor=(0.5, 1.05))
     plt.tight_layout()
-    plt.show()
+    # Save the figure if save_path is provided
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close('all')  # Close the figure after saving to prevent it from displaying
+
+    # Show only if explicitly requested
+    elif show:
+        plt.show()
+    # Ensure figure is closed after use
+    plt.close(fig)  # Close the specific figure
+    plt.close('all')  # Close any remaining figures
+    gc.collect()  # Force garbage collection to free memory
+
 
 
 
