@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import median_abs_deviation
 import matplotlib.patches as mpatches
 import gc
+import os
 
 ### Functions
 # Below are the functions used to evaluate 6 different lightning burst thresholds at the individual TC level.
@@ -206,7 +207,7 @@ def plot_bursts(ax, df, quad=None):
 
 def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type, show=True, save_path=None):
     plt.close('all')
-    cyclone_name = storm_names.filter(pl.col("storm_code") == cyclone_id)["storm_name"].item()
+    cyclone_name = storm_names.filter(pl.col("storm_code") == cyclone_id)["storm_name"][0]#.item()
     df_cyclone = processed[processed['storm_code'] == cyclone_id]
     lightning_data = innercore_data.filter(pl.col("storm_code") == cyclone_id).to_pandas()
 
@@ -262,7 +263,7 @@ def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type, show=Tr
 
 def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_type, show=True, save_path=None):
     plt.close('all')
-    cyclone_name = storm_names.filter(pl.col("storm_code") == cyclone_id)["storm_name"].item()
+    cyclone_name = storm_names.filter(pl.col("storm_code") == cyclone_id)["storm_name"][0]#.item()
     df_cyclone = processed[processed['storm_code'] == cyclone_id]
     lightning_data = innercore_data.filter(pl.col("storm_code") == cyclone_id).to_pandas()
 
@@ -622,3 +623,22 @@ def filter_effective_thresholds(burst_data):
 
     return bursts_effective
 
+def export_visualizations(output_dir, tc_list, bursts, storm_names, lightning_data, bg_types, lightning_type, print_toggle=False):
+    lightning_type_list = ["innercore", "rainband", "shear"]
+    if lightning_type not in lightning_type_list:
+        return(print(f"Not a valid lightning data type. Choose either: {', '.join(lightning_type_list)}"))
+    elif lightning_type == "shear":
+        lightning_type = "rainband_shear"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    file_count = 0
+    # Loop through each row in the TC list
+    for storm_code, storm_name in tc_list.iter_rows():
+        if print_toggle:
+            print(f"Exporting graphs for {storm_name} ({storm_code})")
+        for bg_type in bg_types:
+            # Call function to generate and save without displaying
+            save_path = f"{output_dir}{storm_code}_{storm_name}_{lightning_type}_{bg_type}.png"
+            plot_tc(storm_code, bursts, storm_names, lightning_data, bg_type, show=False, save_path=save_path)
+            file_count += 1
+    print(f"{file_count} files saved.")
