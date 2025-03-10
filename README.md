@@ -142,7 +142,6 @@ Detailed documentation on code requirements and file outputs can be found in eac
 Due to time constraints, we note the following as future work to continue building on the analysis presented in this repository:
 - Lightning burst identification accuracy improvements:
     - Removing landfall from lightning burst analysis - remove data points where TC storm center is within 100km of land
-    - Include entire storm in lightning burst visualizations - currently not fully representing the entirety of storms where inner core/rainband lightning is present for only a subset of the storm length (e.g. if a TC lasts 4 days but only has inner core lightning for the first 3, the last day is not included in the plot)
 - Lightning burst dashboard improvements:
     - Alternatives to using Python visualizations in Power BI due to limitations (developers need Python installed, cannot publish to Power BI web, etc.)
     - Prevent burst markers from overlapping when there are multiple markers on one lightning bin for readability
