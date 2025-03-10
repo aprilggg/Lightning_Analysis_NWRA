@@ -32,6 +32,8 @@ The notebooks should be executed in the following order:
 
 This directory also includes a `intermediate_data/` directory containing the outputted intermediate files from the data pipeline used in subsequent data pipeline activities. Files used for subsequent analysis are in the `data/` folder.
 
+*note that intermediate data files too large for upload to Github can be found in this [Google Drive folder](). **placeholder** These should be placed in the `intermediate_data/` directory.
+
 <a id="requirements"></a>
 
 ### Code Requirements
