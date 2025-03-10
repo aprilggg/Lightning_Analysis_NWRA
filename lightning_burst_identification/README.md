@@ -22,9 +22,13 @@ The files in this directory include:
 2. **`lightning_threshold_innercore.ipynb`**
     - applies threshold calculation, TC plotting functions to inner core dataset
     - identifies lightning bursts at individual TC level and basin level
+    - generates .png files of TC wind/pressure/lightning/burst plots
+    - creates data files used in intensification analysis and dashboard
 3. **`lightning_threshold_rainband.ipynb`**
     - applies threshold calculation, TC plotting functions to rainband dataset
     - identifies lightning bursts at individual TC level and sorts them into shear quadrants
+    - generates .png files of TC wind/pressure/lightning/burst plots at both overall and shear quadrant granularity
+    - creates data files used in intensification analysis and dashboard
 4. **`lightning_burst_dashboard.pbix`**
     - Power BI dashboard visualizing detected bursts in graphical and tabular form
     - includes both inner core and rainband lightning types
