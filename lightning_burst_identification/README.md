@@ -40,19 +40,19 @@ This directory also includes basin-level lightning burst evaluation data in the 
 We log transform the lightning counts per time bin and then calculate a lightning burst threshold based off each storm's log-lightning count distribution. Note that thresholds are evaluated off the log-lightning count, and threshold numbers are also represented on the log scale. We do not include counts associated with wind speeds less than 40 knots, and we do not include time bins with 0 lightning counts in the calculation of our thresholds.
 
 In the lightning burst detection process, we use the following 6 threshold methods (referred to by the names in parentheses hereafter):
-- Median Absolute Deviation - 4 MAD (**MAD1**)
+- [Median Absolute Deviation](https://en.wikipedia.org/wiki/Median_absolute_deviation) - 4 MAD (**MAD1**)
     - This method sets the threshold to be 4 times the median absolute deviation above the median log-lightning count
     - Equation: threshold = median + 4 * MAD
 - Median Absolute Deviation - 5 MAD (**MAD2**)
     - This method sets the threshold to be 5 times the median absolute deviation above the median log-lightning count
     - Equation: threshold = median + 5 * MAD
-- Interquartile Range - 1 IQR (**IQR1**)
+- [Interquartile Range](https://en.wikipedia.org/wiki/Interquartile_range) - 1 IQR (**IQR1**)
     - This method sets the threshold to be 1 interquartile range higher than the upper quartile (Q3) log-lightning count
     - Equation: threshold = Q3 + 1 * IQR
 - Interquartile Range - 1.5 IQR (**IQR2**)
     - This method sets the threshold to be 1.5 interquartile ranges higher than the upper quartile (Q3) log-lightning count
     - Equation: threshold = Q3 + 1.5 * IQR
-- Lognormal - 2 Standard Deviations (**LOGN1**)
+- [Lognormal](https://en.wikipedia.org/wiki/Log-normal_distribution) - 2 Standard Deviations (**LOGN1**)
     - This method sets the threshold to be 2 standard deviations higher than the mean log-lightning count
     - Equation: threshold = mean + 2 * std dev
 - Lognormal - 3 Standard Deviations (**LOGN2**)
