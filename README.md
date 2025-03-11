@@ -25,7 +25,7 @@ UW MSDS Capstone Project with Northwest Research Associates
 
 ## Background Information
 
-NWRA provided WWLLN and track data from 2010-2020, with 984 total TCs in the dataset. For this project, we only look at TCs of category 1 or higher (as defined by the Saffir-Simpson Hurricane Wind Scale provided below), leaving us with 479 TCs for the lightning burst evaluation.
+NWRA provided [WWLLN](https://wwlln.net/) and track data from 2010-2020, with 984 total TCs in the dataset. For this project, we only look at TCs of category 1 or higher (as defined by the Saffir-Simpson Hurricane Wind Scale provided below), leaving us with 479 TCs for the lightning burst evaluation.
 
 ** flesh out later
 
