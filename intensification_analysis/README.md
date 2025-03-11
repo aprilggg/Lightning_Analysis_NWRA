@@ -20,7 +20,7 @@ The notebooks in this directory require the following libraries not built in to 
 - scipy
 - seaborn
 
-The notebooks require the data files in the [analysis_data/](../analysis_data/) folder
+The notebooks require the following data files in the [analysis_data/](../analysis_data/) folder:
 - Inner core dataset: `innercore_bursts.csv`
   - Used by: `innercore_burst_w_intensification.ipynb`
   - Contains: Lightning measurements from storm inner core
@@ -31,7 +31,7 @@ The notebooks require the data files in the [analysis_data/](../analysis_data/) 
 <a id="methods"></a>
 
 ### Methods
-We focus on the IQR1, IQR2, and LOGN1 methods for this analysis. We determined the MAD method to be too volatile, and the LOGN2 method to set the threshold consistently too high.
+We focus on the IQR1, IQR2, and LOGN1 methods for this analysis. We determined the MAD method to be too volatile, and the LOGN2 method to set the threshold consistently too high. Refer [here](../lightning_burst_identification/README.md#lightning-burst-detection-methods) for more details on the three methods not included in this analysis.
 
 - [Interquartile Range](https://en.wikipedia.org/wiki/Interquartile_range) - 1 IQR (**IQR1**)
     - This method sets the threshold to be 1 interquartile range higher than the upper quartile (Q3) log-lightning count
