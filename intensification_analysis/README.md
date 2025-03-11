@@ -7,7 +7,7 @@
 <a id="about"></a>
 
 ### About Directory
-This folder contains files for analyzing lightning data in relation to tropical cyclone intensification. It includes statistical tests and visualizations to examine distribution patterns across different detection methods, cyclone categories, and ocean basins for both the inner-core and rainband regions.
+This folder contains files for analyzing lightning data in relation to tropical cyclone intensification. It includes statistical tests and visualizations to examine distribution patterns across different detection methods, current categories, and basins for both inner core and rainband lightning.
 
 <a id="requirements"></a>
 
