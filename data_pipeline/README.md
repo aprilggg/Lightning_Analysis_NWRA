@@ -142,6 +142,7 @@ The following files are created as part of the data pipeline and kept in the `in
 - `Filtered_Reduced_Trackfile.csv` - filtered TCs (cat 1 or higher) track files
 - `Filtered_WWLLN_Locations.txt` - filtered TCs (cat 1 or higher) WWLLN lightning data
 - `filtered_tc_list.csv` - list of TCs retained after filtering for cat 1 or higher
+- `shear_data_file_log.txt` - log of which TCs have a shear file when creating shear combined dataset
 - `storm_time_period.csv` - TC start and end timestamps from track files for filtered TCs
 - `WWLLN_innercore.csv` - WWLLN inner core lightning for filtered TCs (cat 1 or higher)
 - `WWLLN_rainband.csv` - WWLLN rainband lightning for filtered TCs (cat 1 or higher)
