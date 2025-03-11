@@ -1,7 +1,16 @@
 ## Analysis Data
-This folder contains the files used to power the visualizations in the Power BI dashboard and the statistical analyses in the `intensification_analysis` directory. All data files in this directory are created using the two notebooks in the `lightning_burst_identification` directory.
+
+* [About Directory](#about)
+* [Data Files and Schema](#files)
+
+<a id="about"></a>
+
+### About Directory
+This folder contains the files used to power the visualizations in the Power BI dashboard and the statistical analyses in the `intensification_analysis` directory. All data files in this directory are created using the two notebooks in the [lightning_burst_identification](../lightning_burst_identification/) directory.
 
 This data uses acronyms associated with the lightning burst detection methods. For acronym definitions and method details, refer to [lightning_burst_identification/README.md](../lightning_burst_identification/README.md).
+
+<a id="files"></a>
 
 ### Data Files and Schema
 * [innercore_bursts.csv](#innercore-bursts)
