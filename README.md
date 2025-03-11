@@ -61,7 +61,7 @@ About shear - only use for rainband bc rainband lightning tends to occur in a sp
 
 ## Directory Overview
 
-Intermediate files created and too large to upload to Github can be found here: [Google Drive]() **fill in link
+This repository can be cloned to local following these [instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
 
 **analysis_data** - contains data files used in the Power BI dashboard and intensification analysis created from the lightning burst identification code
 
@@ -72,6 +72,8 @@ Intermediate files created and too large to upload to Github can be found here: 
 **intensification_analysis** - contains notebooks and visualizations for the statistical analysis of the relationship between lightning bursts and TC intensification change
 
 **lightning_burst_identification** - contains notebooks, datasets, and visualizations created in the statistical identification of inner core and rainband lightning bursts at both the individual TC and basin levels
+
+Intermediate files that are too large to upload to Github can be found here, along with the individual TC visualizations created in the lightning burst identification stage of the project: [Google Drive](https://drive.google.com/drive/folders/1VxhljPNirGQL2jP3-bbhCS94neifmepc?usp=sharing)
 
 ### Directory Structure
 ```
@@ -112,6 +114,7 @@ Intermediate files created and too large to upload to Github can be found here: 
 |   └── lightning_threshold_functions.py
 |   └── lightning_threshold_innercore.ipynb
 |   └── lightning_threshold_rainband.ipynb
+|   └── vis_upload.ipynb
 ├── LICENSE
 └── README.md
 ```
