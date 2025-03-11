@@ -1,5 +1,5 @@
 # Lightning Burst Threshold Visualizations
-Visualizations in this directory can also be found [here](https://drive.google.com/drive/folders/1iIZx4ThnT8KyQc6pDPAemjYb0Ma_OFd_?usp=drive_link).
+Visualizations in the [visualizations directory](visualizations/) can also be found in this [Google Drive folder](https://drive.google.com/drive/folders/1iIZx4ThnT8KyQc6pDPAemjYb0Ma_OFd_?usp=drive_link). There are 2172 files in the `visualizations` folder.
 
 ### Directory Overview
 This directory contains the following visualizations for each TC:*
