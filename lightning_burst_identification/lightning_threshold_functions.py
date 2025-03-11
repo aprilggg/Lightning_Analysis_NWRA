@@ -639,6 +639,9 @@ def export_visualizations(output_dir, tc_list, bursts, storm_names, lightning_da
         for bg_type in bg_types:
             # Call function to generate and save without displaying
             save_path = f"{output_dir}{storm_code}_{storm_name}_{lightning_type}_{bg_type}.png"
-            plot_tc(storm_code, bursts, storm_names, lightning_data, bg_type, show=False, save_path=save_path)
+            if lightning_type == "rainband_shear":
+                plot_tc_quadrants(storm_code, bursts, storm_names, lightning_data, bg_type, show=False, save_path=save_path)
+            else:
+                plot_tc(storm_code, bursts, storm_names, lightning_data, bg_type, show=False, save_path=save_path)
             file_count += 1
     print(f"{file_count} files saved.")
