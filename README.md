@@ -5,8 +5,8 @@ UW MSDS Capstone Project with Northwest Research Associates
 * [Objective](#objective)
 * [Background Information](#background)
 * [Directory Overview](#directory-overview)
-* [Deliverables](#deliverables) - need a better name for this... process?
-* [Dependencies](#dependencies)
+* [Repository Components](#deliverables)
+* [Dependencies and Setting Up the Repository](#dependencies)
   * [Environment](#environment)
   * [Data](#data)
 * [Future Work](#future-work)
@@ -60,8 +60,6 @@ About shear - only use for rainband bc rainband lightning tends to occur in a sp
 <a id="directory-overview"></a>
 
 ## Directory Overview
-
-This repository can be cloned to local following these [instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
 
 **analysis_data** - contains data files used in the Power BI dashboard and intensification analysis created from the lightning burst identification code
 
@@ -123,7 +121,7 @@ Detailed documentation on code requirements and file outputs can be found in eac
 
 <a id="deliverables"></a>
 
-## Deliverables
+## Repository Components
 
 ### Data Pipeline
 
@@ -135,9 +133,45 @@ Detailed documentation on code requirements and file outputs can be found in eac
 - jupyter notebooks
 - written report ??
 
+
 <a id="dependencies"></a>
 
-## Dependencies
+## Dependencies and Setting Up the Repository
+
+This repository can be cloned to local following these [instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
+
+<a id="environment"></a>
+
+### Environment
+This repository consists mostly of Jupyter Notebook files. We include [requirement.yml](requirement.yml) and [requirement_simplified.yml](requirement_simplified.yml) files for user convenience.
+
+The code in this repository requires the following installations:
+- Python [Official Python Installation Documentation](https://www.python.org/downloads/)
+
+We recommend using [conda](https://docs.conda.io/projects/conda/en/latest/index.html) to [set up the environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file) using the provided `.yml` files in the repository.
+
+**A Simple Guide to Setting Up an Environment With Conda:**
+1. Make sure you have the following:
+    - [requirement.yml](requirement.yml) or [requirement_simplified.yml](requirement_simplified.yml)
+    - [Miniconda or Anaconda installation](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html)
+2. Create the environment from the [requirement.yml](requirement.yml) file - run the following in your terminal:
+```
+conda env create -f requirement.yml
+```
+Use either `requirement.yml` or `requirement_simplified.yml` in this code depending on your preferences.
+3. Activate the new environment in your terminal:
+```
+conda activate nwra_capstone
+```
+4. Verify that the new environment was installed correctly - look for `nwra_capstone`:
+```
+conda env list
+```
+
+<a id="data"></a>
+
+### Data
+
 
 <a id="future-work"></a>
 

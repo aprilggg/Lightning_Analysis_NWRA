@@ -139,12 +139,12 @@ The following files are created as part of the data pipeline and kept in the `in
 
 - `Combined_Reduced_Trackfile.txt` - all TC track files combined
 - `Combined_WWLLN_Locations.txt` - all TC WWLLN files combined
-- `Filtered_Reduced_Trackfile.csv` - filtered TCs (cat 1 or higher) track files
-- `Filtered_WWLLN_Locations.txt` - filtered TCs (cat 1 or higher) WWLLN lightning data
-- `filtered_tc_list.csv` - list of TCs retained after filtering for cat 1 or higher
+- `Filtered_Reduced_Trackfile.csv` - filtered TCs (category 1 or higher) track files
+- `Filtered_WWLLN_Locations.txt` - filtered TCs (category 1 or higher) WWLLN lightning data
+- `filtered_tc_list.csv` - list of TCs retained after filtering for category 1 or higher
 - `shear_data_file_log.txt` - log of which TCs have a shear file when creating shear combined dataset
 - `storm_time_period.csv` - TC start and end timestamps from track files for filtered TCs
-- `WWLLN_innercore.csv` - WWLLN inner core lightning for filtered TCs (cat 1 or higher)
-- `WWLLN_rainband.csv` - WWLLN rainband lightning for filtered TCs (cat 1 or higher)
-- `WWLLN_innercore_timebin_count.csv` - WWLLN inner core binned lightning counts for filtered TCs (cat 1 or higher)
-- `unbinned_shear_data.txt` - WWLLN lightning data for filtered TCs (cat 1 or higher) with shear angle
+- `WWLLN_innercore.csv` - WWLLN inner core lightning for filtered TCs (category 1 or higher)
+- `WWLLN_rainband.csv` - WWLLN rainband lightning for filtered TCs (category 1 or higher)
+- `WWLLN_innercore_timebin_count.csv` - WWLLN inner core binned lightning counts for filtered TCs (category 1 or higher)
+- `unbinned_shear_data.txt` - WWLLN lightning data for filtered TCs (category 1 or higher) with shear angle
