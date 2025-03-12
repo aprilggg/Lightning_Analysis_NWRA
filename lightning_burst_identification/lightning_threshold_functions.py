@@ -20,8 +20,21 @@ import os
 # We also create functions to apply the thresholds and aggregate results, as well as functions used to plot individual TCs for analysis.
 
 
-# IQR threshold function
 def detect_bursts_iqr(group):
+    """
+    Calculates Interquartile Range method log lightning burst thresholds at the
+    individual TC level and applies to passed-in data.
+    Marks a lightning burst if the log lightning count passes the defined threshold.
+    IQR1 refers to 1*IQR higher than the third quartile, IQR2 refers to 1.5*IQR
+    higher than the third quartile.
+
+    Parameters:
+    - group: set of data from the DataFrame passed in
+
+    Returns:
+    - group: data with 4 added columns: 'burst_iqr1', 'burst_iqr2',
+    'iqr1_threshold', 'iqr2_threshold'
+    """
     Q1 = group['log_lightning_count'].quantile(0.25)
     Q3 = group['log_lightning_count'].quantile(0.75)
     IQR = Q3 - Q1
@@ -31,15 +44,27 @@ def detect_bursts_iqr(group):
     threshold2 = Q3 + 1.5* IQR
 
     # Mark bursts specific to the cyclone
-    group['burst_iqr1'] = group['log_lightning_count'] > threshold1
+    group['burst_iqr1'] = group['log_lightning_count'] > threshold1 # Returns boolean
     group['burst_iqr2'] = group['log_lightning_count'] > threshold2
     group['iqr1_threshold'] = threshold1
     group['iqr2_threshold'] = threshold2
     return group
 
-
-# MAD threshold function
 def detect_bursts_mad(group):
+    """
+    Calculates Median Absolute Deviation method log lightning burst thresholds
+    at the individual TC level and applies to passed-in data.
+    Marks a lightning burst if the log lightning count passes the defined threshold.
+    MAD1 refers to 4*MAD higher than the median log lightning count, MAD2 refers
+    to 5*MAD higher than the median log lightning count.
+
+    Parameters:
+    - group: set of data from the DataFrame passed in
+
+    Returns:
+    - group: data with 4 added columns: 'burst_mad1', 'burst_mad2',
+    'mad1_threshold', 'mad2_threshold'
+    """
     median_log = group['log_lightning_count'].median()
     mad_log = median_abs_deviation(group['log_lightning_count'])
 
@@ -54,9 +79,21 @@ def detect_bursts_mad(group):
     group['mad2_threshold'] = threshold2
     return group
 
-
-# Log normal threshold function
 def detect_bursts_lognormal(group):
+    """
+    Calculates Log-normal Standard Deviation method log lightning burst thresholds
+    at the individual TC level and applies to passed-in data.
+    Marks a lightning burst if the log lightning count passes the defined threshold.
+    LOGN1 refers to 2 standard deviations higher than the mean log lightning count,
+    LOGN2 refers to 3 standard deviations higher than the mean log lightning count.
+
+    Parameters:
+    - group: set of data from the DataFrame passed in
+
+    Returns:
+    - group: data with 4 added columns: 'burst_logn1', 'burst_logn2',
+    'logn1_threshold', 'logn2_threshold'
+    """
      # Calculate the mean and standard deviation of the log-transformed lightning count
     mean_log = group['log_lightning_count'].mean()
     std_log = group['log_lightning_count'].std()
@@ -72,13 +109,25 @@ def detect_bursts_lognormal(group):
     group['logn2_threshold'] = threshold2
     return group
 
-
-# Function to apply the 3 methods, 6 thresholds for individual TCs
 def apply_individual_thresholds(df):
+    """
+    Applies the three lightning burst threshold calculation functions to the data
+    at the individual TC level (comparing each storm's lightning with itself).
+
+    Parameters:
+    - df: DataFrame with binned log lightning counts
+
+    Returns:
+    - bursts: DataFrame with added columns denoting bursts (True/False) and
+    threshold values for each storm, time bin, threshold method
+    """
+    # Apply IQR function
     bursts = df.groupby(["storm_code"]).apply(detect_bursts_iqr)
     bursts.reset_index(drop=True, inplace=True)
+    # Apply MAD function
     bursts = bursts.groupby(["storm_code"]).apply(detect_bursts_mad)
     bursts.reset_index(drop=True, inplace=True)
+    # Apply Lognormal function
     bursts = bursts.groupby(["storm_code"]).apply(detect_bursts_lognormal)
     bursts.reset_index(drop=True, inplace=True)
     # Reset index to keep data points in chronological order
@@ -88,6 +137,21 @@ def apply_individual_thresholds(df):
 
 # Function used to aggregate results dataframe
 def create_tc_summary(processed, rainband=None):
+    """
+    Aggregates the burst data at the TC level to get burst count per method and
+    each method's threshold value for each TC.
+
+    Parameters:
+    - processed: DataFrame with burst columns indicating if a burst is detected
+    for the 6 threshold methods
+    - rainband: Boolean value denoting if the input data is for rainband lightning,
+    if True then group the data by shear quadrant as well as storm code
+
+    Returns:
+    - tc_summary: DataFrame with burst count per method and each method's
+    threshold value for each TC, as well as the proportion of non-zero lightning count
+    time bins marked as a burst for each method
+    """
     if rainband is not None:
         grouping = ["storm_code", "shear_quad"]
     else:
@@ -120,12 +184,17 @@ def create_tc_summary(processed, rainband=None):
 
 def add_bg_colors(ax, lightning_data, color_type):
     """
-    Adds background shading based on either the 'Intensification_Category_3' column or 'Current_Category' column.
+    Adds background shading based on either the 'Intensification_Category_3', 'Intensification_Category_5',
+    or 'Current_Category' column.
 
     Parameters:
     - ax: The matplotlib axis to plot on.
-    - lightning_data: DataFrame with 'time_bin', 'Intensification_Category_3', and 'Current_Category'
-    - color_type: toggle between coloring by intensification change category or current category, can only take i3, i5, c5 as values
+    - lightning_data: DataFrame with 'time_bin', 'Intensification_Category_3', 'Intensification_Category_5', and 'Current_Category'
+    - color_type: toggle between coloring by intensification change category or current category,
+    can only take "i3", "i5", "c5" as values
+
+    Returns:
+    - legend_patches: matplotlib patch for use in plot legend
     """
     # Define color mapping
     i3_colors = {
@@ -177,6 +246,15 @@ def add_bg_colors(ax, lightning_data, color_type):
 
 
 def plot_bursts(ax, df, quad=None):
+    """
+    Plots the burst markers for each of the 6 threshold types using the passed-in data.
+
+    Parameters:
+    - ax: The matplotlib axis to plot on.
+    - df: The DataFrame with the burst data to plot markers with
+    - quad: Optional parameter denoting the shear quadrant to plot, applies only to rainband data
+    """
+    # Set up column name, color, method, threshold type, and marker for each
     burst_columns = {
         'mad1': ['burst_mad1', 'red', 'MAD', '1', 'o'],
         'mad2': ['burst_mad2', 'yellow', 'MAD', '2', 'o'],
@@ -185,6 +263,7 @@ def plot_bursts(ax, df, quad=None):
         'logn1': ['burst_logn1', 'purple', 'LOGN','1', '^'],
         'logn2': ['burst_logn2', 'green', 'LOGN','2', '^']
     }
+    # If quad is passed in, create masks to filter for shear quad value
     if quad is not None:
         burst_masks = {
         "mad1": df['burst_mad1'] & (df['shear_quad'] == quad),
@@ -197,25 +276,38 @@ def plot_bursts(ax, df, quad=None):
 
     # Mark bursts detected by each method
     for key, (col, color, method, threshold, marker) in burst_columns.items():
+        # If quad is passed in, use the shear quad mask
         if quad is not None:
             col_mask = burst_masks[key]
+        # Otherwise use just the column name
         else:
             col_mask = df[col]
         ax.scatter(df['time_bin'][col_mask],
                     df['lightning_count'][col_mask],
                     color=color, label=f'{method}{threshold} Burst', s=50, marker=marker, alpha=0.7)
 
-def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type, show=True, save_path=None):
-    plt.close('all')
-    cyclone_name = storm_names.filter(pl.col("storm_code") == cyclone_id)["storm_name"][0]#.item()
-    df_cyclone = processed[processed['storm_code'] == cyclone_id]
-    lightning_data = innercore_data.filter(pl.col("storm_code") == cyclone_id).to_pandas()
+def plot_tc(storm_id, processed, storm_names, storm_data, bg_type, show=True, save_path=None):
+    """
+    Plots the lightning, wind, pressure, marked bursts, and color-coded background for an individual TC.
+    Can optionally save the generated plot to .png file if a path is passed in.
 
-    #plt.figure(figsize=(10, 5))
+    Parameters:
+    - storm_id: Storm code in the basin_year_num format (e.g. "ATL_10_1")
+    - processed: pandas DataFrame containing the bursts per time bin in True/False format
+    - storm_names: polars DataFrame containing unique storm name and storm code
+    - storm_data: polars DataFrame containing wind, pressure, lightning, current category, and intensification stage data
+    - bg_type: Either "i3", "i5", or "c5", for use in choosing background color-coding type
+    - show: Optional Boolean to toggle showing the plot
+    - save_path: Optional path to save the generated plot to
+    """
+    plt.close('all') # Clean up any open plots for memory
+    storm_name = storm_names.filter(pl.col("storm_code") == storm_id)["storm_name"][0] # Lookup storm name
+    # Filter to just one storm
+    df_cyclone = processed[processed['storm_code'] == storm_id]
+    lightning_data = storm_data.filter(pl.col("storm_code") == storm_id).to_pandas() #
 
     # Create first y-axis for lightning
     fig, ax1 = plt.subplots(figsize=(14, 8))
-
     ax1.plot(lightning_data['time_bin'], lightning_data['lightning_count'], label='Lightning Count', color='gray')
     ax1.set_xlabel("Time")
     ax1.set_ylabel("Lightning Count", color="gray")
@@ -227,7 +319,7 @@ def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type, show=Tr
     ax2.set_ylabel("Pressure", color="#d16002")
     ax2.tick_params(axis='y', labelcolor="#d16002")
 
-    # Create third y-axis for wind knot
+    # Create third y-axis for wind speed
     ax3 = ax1.twinx()
     ax3.spines['right'].set_position(('outward', 50))  # Move the third axis outward for separation
     ax3.plot(lightning_data['time_bin'], lightning_data['knots'], label='Wind', color='blue')
@@ -240,10 +332,11 @@ def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type, show=Tr
     # Call bursts function
     plot_bursts(ax1, df_cyclone)
 
+    # Add labels, title, legend
     plt.xlabel('Time')
-    plt.title(f'Lightning Burst Detection for {cyclone_name} ({cyclone_id})', fontsize=14)
-    ax1.legend(loc='upper left', fontsize=12)
-    ax2.legend(handles=legend_patches, loc='center left', fontsize=12)
+    plt.title(f'Lightning Burst Detection for {storm_name} ({storm_id})', fontsize=14)
+    ax1.legend(loc='upper left', fontsize=12) # Burst marker legend
+    ax2.legend(handles=legend_patches, loc='center left', fontsize=12) # Background color legend
     plt.xticks(visible=False)
     plt.grid()
 
@@ -261,23 +354,38 @@ def plot_tc(cyclone_id, processed, storm_names, innercore_data, bg_type, show=Tr
     gc.collect()  # Force garbage collection to free memory
 
 
-def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_type, show=True, save_path=None):
-    plt.close('all')
-    cyclone_name = storm_names.filter(pl.col("storm_code") == cyclone_id)["storm_name"][0]#.item()
-    df_cyclone = processed[processed['storm_code'] == cyclone_id]
-    lightning_data = innercore_data.filter(pl.col("storm_code") == cyclone_id).to_pandas()
+def plot_tc_quadrants(storm_id, processed, storm_names, storm_data, bg_type, show=True, save_path=None):
+    """
+    Plots the lightning, wind, pressure, marked bursts, and color-coded background by shear quadrant for an individual TC.
+    Only applicable for rainband data. Generates a 2x2 plot with all 4 quadrants.
+    Can optionally save the generated plot to .png file if a path is passed in.
 
+    Parameters:
+    - storm_id: Storm code in the basin_year_num format (e.g. "ATL_10_1")
+    - processed: pandas DataFrame containing the bursts per time bin in True/False format
+    - storm_names: polars DataFrame containing unique storm name and storm code
+    - storm_data: polars DataFrame containing wind, pressure, lightning, current category, and intensification stage data
+    - bg_type: Either "i3", "i5", or "c5", for use in choosing background color-coding type
+    - show: Optional Boolean to toggle showing the plot
+    - save_path: Optional path to save the generated plot to
+    """
+    plt.close('all') # Clean up any open plots for memory
+    storm_name = storm_names.filter(pl.col("storm_code") == storm_id)["storm_name"][0] # Lookup storm name
+    # Filter data to one storm
+    df_cyclone = processed[processed['storm_code'] == storm_id]
+    lightning_data = storm_data.filter(pl.col("storm_code") == storm_id).to_pandas()
+    # Define the shear quadrants to plot - display the quadrants in the same order as shear quad graphic
     quadrants = ["UL", "DL", "UR", "DR"]
-    fig, axes = plt.subplots(2, 2, figsize=(14, 12), sharey=True, sharex=False) #sharex=True,
+    fig, axes = plt.subplots(2, 2, figsize=(14, 12), sharey=True, sharex=False)
     axes = axes.flatten()
 
     # Create empty lists to store legend handles and labels
     all_handles = []
     all_labels = []
-
     # Create a set to track labels we've added already (to prevent duplicates)
     added_labels = set()
 
+    # Create a plot for each quadrant
     for i, quad in enumerate(quadrants):
         ax = axes[i]
 
@@ -287,7 +395,7 @@ def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_typ
 
         # Plot lightning count
         ax.plot(lightning_quad['time_bin'], lightning_quad['lightning_count'], label='Lightning Count', color='gray')
-        ax.set_title(f"{cyclone_name} ({cyclone_id}) - {quad}")
+        ax.set_title(f"{storm_name} ({storm_id}) - {quad}")
         ax.set_xlabel("Time")
         ax.set_ylabel("Lightning Count", color="gray")
         ax.tick_params(axis='y', labelcolor="gray")
@@ -349,8 +457,37 @@ def plot_tc_quadrants(cyclone_id, processed, storm_names, innercore_data, bg_typ
     plt.close('all')  # Close any remaining figures
     gc.collect()  # Force garbage collection to free memory
 
+def export_visualizations(output_dir, tc_list, bursts, storm_names, lightning_data, bg_types, lightning_type, print_toggle=False):
+    """
+    Generates lightning, wind, pressure, burst plots for the passed-in data and saves to an output directory.
+    Calls the plot_tc, plot_tc_quadrants, plot_bursts, and add_bg_colors functions.
 
+    Parameters:
+    -
+    """
+    lightning_type_list = ["innercore", "rainband", "shear"]
+    if lightning_type not in lightning_type_list:
+        return(print(f"Not a valid lightning data type. Choose either: {', '.join(lightning_type_list)}"))
+    elif lightning_type == "shear":
+        lightning_type = "rainband_shear"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    file_count = 0
+    # Loop through each row in the TC list
+    for storm_code, storm_name in tc_list.iter_rows():
+        if print_toggle:
+            print(f"Exporting graphs for {storm_name} ({storm_code})")
+        for bg_type in bg_types:
+            # Call function to generate and save without displaying
+            save_path = f"{output_dir}{storm_code}_{storm_name}_{lightning_type}_{bg_type}.png"
+            if lightning_type == "rainband_shear":
+                plot_tc_quadrants(storm_code, bursts, storm_names, lightning_data, bg_type, show=False, save_path=save_path)
+            else:
+                plot_tc(storm_code, bursts, storm_names, lightning_data, bg_type, show=False, save_path=save_path)
+            file_count += 1
+    print(f"{file_count} files saved.")
 
+### The below functions are used for basin-level threshold analysis ###
 
 def group_bins_category(dataset):
     # split bins into 0-2, 1-2, and 3-5 categories - return 3 datasets
@@ -622,26 +759,3 @@ def filter_effective_thresholds(burst_data):
         bursts_effective[threshold_col] = bursts_effective[threshold_col].where(bursts_effective[burst_col], np.nan)
 
     return bursts_effective
-
-def export_visualizations(output_dir, tc_list, bursts, storm_names, lightning_data, bg_types, lightning_type, print_toggle=False):
-    lightning_type_list = ["innercore", "rainband", "shear"]
-    if lightning_type not in lightning_type_list:
-        return(print(f"Not a valid lightning data type. Choose either: {', '.join(lightning_type_list)}"))
-    elif lightning_type == "shear":
-        lightning_type = "rainband_shear"
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    file_count = 0
-    # Loop through each row in the TC list
-    for storm_code, storm_name in tc_list.iter_rows():
-        if print_toggle:
-            print(f"Exporting graphs for {storm_name} ({storm_code})")
-        for bg_type in bg_types:
-            # Call function to generate and save without displaying
-            save_path = f"{output_dir}{storm_code}_{storm_name}_{lightning_type}_{bg_type}.png"
-            if lightning_type == "rainband_shear":
-                plot_tc_quadrants(storm_code, bursts, storm_names, lightning_data, bg_type, show=False, save_path=save_path)
-            else:
-                plot_tc(storm_code, bursts, storm_names, lightning_data, bg_type, show=False, save_path=save_path)
-            file_count += 1
-    print(f"{file_count} files saved.")
