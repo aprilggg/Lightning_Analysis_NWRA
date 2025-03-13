@@ -183,6 +183,6 @@ Due to time constraints, we note the following as future work to continue buildi
     - Alternatives to using Python visualizations in Power BI due to limitations (developers need Python installed, cannot publish to Power BI web, etc.)
     - Prevent burst markers from overlapping when there are multiple markers on one lightning bin for readability
 - Inclusion of GLM data:
-    - WWLLN data tends to include more intense lightning events due to the nature of the data collection methods. Using GLM data to perform the same analysis may yield more insightful results.
+    - WWLLN data tends to include more intense lightning strokes due to the nature of the data collection methods. Using GLM data to perform the same analysis may yield more insightful results.
 - Machine learning in lightning burst detection:
     - The use of machine learning to detect lightning bursts may show unexpected patterns, and can be a more flexible method of identifying lightning bursts than the ones used in this project.

@@ -6,13 +6,13 @@
 <a id="about"></a>
 
 ### About Directory
-This directory contains all exploratory data analysis efforts created in the start of this project. We aim to understand WWLLN and TC track file data by plotting lightning events and storm centers for specific storms. We also explore different descriptive analytics at the overall level, the filtered TC level (TC category 1 or higher), and at basin levels. This directory requires data created in the [data_pipeline](../data_pipeline/) part of this project.
+This directory contains all exploratory data analysis efforts created in the start of this project. We aim to understand WWLLN and TC track file data by plotting lightning strokes and storm centers for specific storms. We also explore different descriptive analytics at the overall level, the filtered TC level (TC category 1 or higher), and at basin levels. This directory requires data created in the [data_pipeline](../data_pipeline/) part of this project.
 
 This directory contains the following notebooks:
 - **`exploratory_analysis.ipynb`**
     - explore full WWLLN and storm track datasets
     - explore filtered WWLLN and storm track datasets (TC category 1 or higher)
-    - explore descriptive analytics including storm duration, storm counts per year, lightning event distribution, wind-pressure relationship
+    - explore descriptive analytics including storm duration, storm counts per year, lightning stroke distribution, wind-pressure relationship
 - **`basin_descriptive_analysis.ipynb`**
     - explore inner core and rainband WWLLN data by basin
     - explore rainband lightning data by shear quadrant for each basin

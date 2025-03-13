@@ -20,14 +20,14 @@ The notebooks should be executed in the following order:
     - parse tropical cyclone names and IDs
     - create combined files for WWLLN lightning and TC trackfile datasets
     - calculate lightning distances and filter TCs by category
-    - bin lightning events into 30-minute bins for inner core data
+    - bin lightning strokes into 30-minute bins for inner core data
     - join lightning bins with TC wind and pressure data for inner core data
     - calculate current category and intensification change for inner core data
     - create `innercore_timebin_joined.csv`
 4. **`rainband_data.ipynb`**
     - look for shear data files stored in USB
     - combine individual TC shear data files into one consolidated file
-    - calculate shear angle and quadrant for rainband lightning events
+    - calculate shear angle and quadrant for rainband lightning strokes
     - create timebins for rainband data
     - join rainband WWLLN data to trackfiles for rainband data
     - calculate current category and intensification change for rainband data
@@ -88,7 +88,7 @@ Used in [lightning_threshold_innercore.ipynb](../lightning_burst_identification/
 | -------- | ------- | ------- |
 | time_bin | Datetime | 30 minute bin |
 | storm_code | String | formatted as basin_year_stormnumber|
-| lightning_count | Integer | number of inner core lightning events in time bin |
+| lightning_count | Integer | number of inner core lightning strokes in time bin |
 | year | Integer | |
 | month | Integer |  |
 | day | Integer | |
@@ -116,7 +116,7 @@ Used in [lightning_threshold_rainband.ipynb](../lightning_burst_identification/l
 | time_bin | Datetime | 30 minute bin |
 | shear_quad | String | shear quadrant |
 | storm_code | String | formatted as basin_year_stormnumber|
-| lightning_count | Integer | number of inner core lightning events in time bin |
+| lightning_count | Integer | number of inner core lightning strokes in time bin |
 | year | Integer | |
 | month | Integer |  |
 | day | Integer | |

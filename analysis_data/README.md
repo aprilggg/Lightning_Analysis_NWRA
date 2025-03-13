@@ -29,7 +29,7 @@ This dataset contains the bursts detected for the inner core data using the 6 th
 | -------- | ------- | ------- |
 | time_bin | Datetime | 30 minute bin |
 | storm_code | String | formatted as basin_year_stormnumber|
-| lightning_count | Integer | number of inner core lightning events in time bin |
+| lightning_count | Integer | number of inner core lightning strokes in time bin |
 | year | Integer | |
 | month | Integer |  |
 | day | Integer | |
@@ -71,7 +71,7 @@ This dataset provides the lightning count (in 30 minute bins), wind, and pressur
 | -------- | ------- | ------- |
 | time_bin | Datetime | 30 minute bin |
 | storm_code | String | formatted as basin_year_stormnumber|
-| lightning_count | Integer | number of inner core lightning events in time bin |
+| lightning_count | Integer | number of inner core lightning strokes in time bin |
 | year | Integer | |
 | month | Integer |  |
 | day | Integer | |
@@ -132,7 +132,7 @@ This dataset contains the bursts detected for the rainband data using the 6 thre
 | time_bin | Datetime | 30 minute bin |
 | shear_quad | String | shear quadrant |
 | storm_code | String | formatted as basin_year_stormnumber|
-| lightning_count | Integer | number of inner core lightning events in time bin |
+| lightning_count | Integer | number of inner core lightning strokes in time bin |
 | year | Integer | |
 | month | Integer |  |
 | day | Integer | |
@@ -176,7 +176,7 @@ This dataset provides the lightning count (in 30 minute bins), wind, and pressur
 | time_bin | Datetime | 30 minute bin |
 | shear_quad | String | shear quadrant |
 | storm_code | String | formatted as basin_year_stormnumber|
-| lightning_count | Integer | number of rainband lightning events in time bin |
+| lightning_count | Integer | number of rainband lightning strokes in time bin |
 | year | Integer | |
 | month | Integer |  |
 | day | Integer | |
