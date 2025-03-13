@@ -304,7 +304,7 @@ def plot_tc(storm_id, processed, storm_names, storm_data, bg_type, show=True, sa
     storm_name = storm_names.filter(pl.col("storm_code") == storm_id)["storm_name"][0] # Lookup storm name
     # Filter to just one storm
     df_cyclone = processed[processed['storm_code'] == storm_id]
-    lightning_data = storm_data.filter(pl.col("storm_code") == storm_id).to_pandas() #
+    lightning_data = storm_data.filter(pl.col("storm_code") == storm_id).to_pandas()
 
     # Create first y-axis for lightning
     fig, ax1 = plt.subplots(figsize=(14, 8))
@@ -343,10 +343,9 @@ def plot_tc(storm_id, processed, storm_names, storm_data, bg_type, show=True, sa
     # Save the figure if save_path is provided
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        plt.close('all')  # Close the figure after saving to prevent it from displaying
 
     # Show only if explicitly requested
-    elif show:
+    if show:
         plt.show()
     # Ensure figure is closed after use
     plt.close(fig)  # Close the specific figure
@@ -447,10 +446,9 @@ def plot_tc_quadrants(storm_id, processed, storm_names, storm_data, bg_type, sho
     # Save the figure if save_path is provided
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        plt.close('all')  # Close the figure after saving to prevent it from displaying
 
     # Show only if explicitly requested
-    elif show:
+    if show:
         plt.show()
     # Ensure figure is closed after use
     plt.close(fig)  # Close the specific figure
