@@ -461,54 +461,85 @@ def export_visualizations(output_dir, tc_list, bursts, storm_names, lightning_da
     Calls the plot_tc, plot_tc_quadrants, plot_bursts, and add_bg_colors functions.
 
     Parameters:
-    -
+    - output_dir: Path to directory to put visualizations
+    - tc_list: DataFrame of storm codes and storm names to generate visualizations for
+    - bursts: DataFrame of lightning time bins with burst evaluation (True/False for each threshold type)
+    - storm_names: DataFrame of unique storm names and storm codes, used to lookup storm name
+    - lightning_data: DataFrame containing all lightning to plot (including those not in threshold analysis)
+    - bg_types: List of background color-coding types to generate plots for (valid values: "i3", "i5", "c5")
+    - lightning_type: Specify lightning type to control plot type and output file name (valid values: "innercore", "rainband", "shear")
+    - print_toggle: Optional Boolean controlling individual file print statements, default to False
     """
+    # Define valid values for lighting_type parameter
     lightning_type_list = ["innercore", "rainband", "shear"]
     if lightning_type not in lightning_type_list:
         return(print(f"Not a valid lightning data type. Choose either: {', '.join(lightning_type_list)}"))
     elif lightning_type == "shear":
         lightning_type = "rainband_shear"
+    # Check if output directory exists, if not create it
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+    # Keep count of files saved
     file_count = 0
     # Loop through each row in the TC list
     for storm_code, storm_name in tc_list.iter_rows():
         if print_toggle:
             print(f"Exporting graphs for {storm_name} ({storm_code})")
+        # Loop through each background color-coding type
         for bg_type in bg_types:
-            # Call function to generate and save without displaying
+            # Create save path
             save_path = f"{output_dir}{storm_code}_{storm_name}_{lightning_type}_{bg_type}.png"
+            # If shear, plot the 2x2 shear quadrant plot
             if lightning_type == "rainband_shear":
                 plot_tc_quadrants(storm_code, bursts, storm_names, lightning_data, bg_type, show=False, save_path=save_path)
+            # If not, plot the singular plot
             else:
                 plot_tc(storm_code, bursts, storm_names, lightning_data, bg_type, show=False, save_path=save_path)
             file_count += 1
     print(f"{file_count} files saved.")
 
+
 ### The below functions are used for basin-level threshold analysis ###
 
 def group_bins_category(dataset):
-    # split bins into 0-2, 1-2, and 3-5 categories - return 3 datasets
+    """
+    Splits the input dataset into 3 category groupings: 0-2, 1-2, and 3-5.
+
+    Parameters:
+    - dataset: DataFrame of lightning count time bins with identified bursts (True/False) to split into category groupings.
+
+    Returns:
+    - weak0_lightning: DataFrame of data associated with category 0-2 wind speeds
+    - weak1_lightning: DataFrame of data associated with category 1-2 wind speeds
+    - strong_lightning: DataFrame of data associated with category 3-5 wind speeds
+    """
+    # Define the category groupings
     weak_cat0 = ["0", "1", "2"]
     weak_cat1 = ["1", "2"]
     strong_cat = ["3", "4", "5"]
 
-    # separate the 2 category groupings
+    # Separate the 3 category groupings
     weak0_lightning = dataset[dataset["Current_Category"].isin(weak_cat0)]
-    print(f"{len(weak0_lightning)} non-zero lightning count timebins associated with category {min(weak_cat0)}-{max(weak_cat0)} wind speeds in EPAC basin.")
+    print(f"{len(weak0_lightning)} non-zero lightning count timebins associated with category {min(weak_cat0)}-{max(weak_cat0)} wind speeds.")
 
     weak1_lightning = dataset[dataset["Current_Category"].isin(weak_cat1)]
-    print(f"{len(weak1_lightning)} non-zero lightning count timebins associated with category {min(weak_cat1)}-{max(weak_cat1)} wind speeds in EPAC basin.")
+    print(f"{len(weak1_lightning)} non-zero lightning count timebins associated with category {min(weak_cat1)}-{max(weak_cat1)} wind speeds.")
 
     strong_lightning = dataset[dataset["Current_Category"].isin(strong_cat)]
-    print(f"{len(strong_lightning)} non-zero lightning count timebins associated with category {min(strong_cat)}-{max(strong_cat)} wind speeds in EPAC basin.")
+    print(f"{len(strong_lightning)} non-zero lightning count timebins associated with category {min(strong_cat)}-{max(strong_cat)} wind speeds.")
 
     return weak0_lightning, weak1_lightning, strong_lightning
 
-
 def plot_threshold_histogram(dataset, threshold_type, ax=None):
-    if ax is None: # enable plotting multiple in a grid if ax passed in
-        fig, ax = plt.subplots()
+    """
+    Plots histogram of thresholds for a group of TCs.
+
+    Parameters:
+    - dataset: DataFrame of lightning count time bins with threshold values (not aggregated to TC level)
+    - threshold_type: Specify which threshold type to plot (e.g. "mad1")
+    - ax: Optional parameter used to enable plotting multiple graphs in a grid
+    """
+    # Create dictionary of threshold names and column names to lookup
     threshold_names = {
         'mad1':['mad1_threshold','MAD1'],
         'mad2':['mad2_threshold','MAD2'],
@@ -518,9 +549,11 @@ def plot_threshold_histogram(dataset, threshold_type, ax=None):
         'logn2':['logn2_threshold','Lognormal 3 Sigma'],
     }
     if ax is None:
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots() # Enable plotting multiple in a grid if ax passed in
+    # Filter the data to the specified threshold type
     plot_data = dataset[threshold_names[threshold_type][0]]
-    if plot_data is None or len(plot_data) == 0 or sum(plot_data.isnull()) == len(plot_data):  # Check if data is empty
+    # Check if data is empty - if so, show "No Data Available"
+    if plot_data is None or len(plot_data) == 0 or sum(plot_data.isnull()) == len(plot_data):
         ax.text(0.5, 0.5, "No Data Available", fontsize=12, ha='center', va='center')
         ax.set_xlim(0, 1)
         ax.set_ylim(0, 1)
@@ -531,14 +564,24 @@ def plot_threshold_histogram(dataset, threshold_type, ax=None):
         ax.spines['left'].set_visible(False)
         ax.spines['bottom'].set_visible(False)
         ax.set_title(f"Histogram of {threshold_names[threshold_type][1]} Burst Threshold")
+    # If there is data, plot the histogram
     else:
         ax.hist(plot_data, bins=20, edgecolor="black", align="left")
         ax.set_xlabel("Lightning Burst Threshold (Log10 Scale)")
         ax.set_ylabel("Frequency")
         ax.set_title(f"Histogram of {threshold_names[threshold_type][1]} Burst Threshold")
 
+def plot_threshold_boxplot(dataset, category_group):
+    """
+    Plots boxplot of thresholds for a group of TCs.
 
-def plot_threshold_boxplot(dataset, category_group, ax=None):
+    Parameters:
+    - dataset: DataFrame of lightning count time bins with threshold values (not aggregated to TC level)
+    - category_group: Specify what category grouping this plot is for (valid values: "all", "0-2", "1-2", "3-5")
+    """
+    category_group_list = ["all", "0-2", "1-2", "3-5"]
+    if category_group not in category_group_list:
+        return(print(f"Not a valid category group. Choose either: {', '.join(category_group_list)}"))
     plt.figure(figsize=(10, 6))
     plt.boxplot([dataset['mad1_threshold'], dataset['mad2_threshold'], dataset['iqr1_threshold'],
                 dataset['iqr2_threshold'], dataset['logn1_threshold'], dataset['logn2_threshold']]
@@ -550,8 +593,17 @@ def plot_threshold_boxplot(dataset, category_group, ax=None):
 
     plt.show()
 
-
 def create_burst_summary(dataset):
+    """
+    Create DataFrame of aggregated burst count, time bin count, and burst percentage for a group of TCs.
+
+    Parameters:
+    - dataset: DataFrame of lightning count time bins with threshold values (not aggregated to TC level)
+
+    Returns:
+    - burst_summary: DataFrame with burst count, time bin count, and burst percentage for each threshold type.
+    """
+    # Define threshold names, column names
     threshold_names = {
         'mad1':['mad1_threshold','MAD1'],
         'mad2':['mad2_threshold','MAD2'],
@@ -561,19 +613,36 @@ def create_burst_summary(dataset):
         'logn2':['logn2_threshold','Lognormal 3 Sigma'],
     }
     threshold_keys = list(threshold_names.keys())
+    # Create list of burst column names (that match the input dataset column names)
     burst_labels = [f'burst_{key}' for key, value in threshold_names.items()]
     # Generate burst summary
     burst_summary = {
         "Threshold": threshold_keys,
-        "Burst Count": [dataset[b].sum() for b in burst_labels],
-        "Timebin Count": [dataset["time_bin"].count() for i in range(len(burst_labels))],
+        "Burst Count": [dataset[b].sum() for b in burst_labels], # Sum of bursts per burst type
+        "Timebin Count": [dataset["time_bin"].count() for i in range(len(burst_labels))], # Count of time bins per burst type
         "Burst Percentage": [round(dataset[b].sum()/dataset["time_bin"].count()*100, 2) for b in burst_labels]
     }
+    # Convert dictionary to DataFrame
     burst_summary = pd.DataFrame(burst_summary)
     return burst_summary
 
 
 def create_basin_summary(dataset, category_group, basin):
+    """
+    Create DataFrame of aggregated burst count, time bin count, burst percentage,
+    min/max/avg/median threshold values for a group of TCs.
+    Calls the create_burst_summary() function.
+
+    Parameters:
+    - dataset: DataFrame of lightning count time bins with threshold values (not aggregated to TC level)
+    - category_group: Specify which category grouping the input data is for (valid values: "0-2", "1-2", "3-5", "all")
+    - basin: Basin to generate summary for (valid values: "ATL", "EPAC", "WPAC", "IO", "SHEM", "CPAC")
+
+    Returns:
+    - DataFrame with burst count, time bin count, burst percentage, mean, standard deviation,
+    median, minimum, and maximum threshold values for each threshold type for the specified basin/category group.
+    """
+    # Define valid input values
     valid_categories = ["0-2", "1-2", "3-5", "all"]
     valid_basins = ["ATL", "EPAC", "WPAC", "IO", "SHEM", "CPAC"]
     threshold_names = {
@@ -593,6 +662,7 @@ def create_basin_summary(dataset, category_group, basin):
     elif basin not in valid_basins:
         return(print(f"Not a valid basin. Choose either: {', '.join(valid_basins)}"))
 
+    # Call burst summary function to create burst summary
     burst_summary = create_burst_summary(dataset)
 
     # Get mean and 2 standard deviations - threshold summary
@@ -611,10 +681,22 @@ def create_basin_summary(dataset, category_group, basin):
     # Join the two dataframes and return
     return pd.merge(threshold_summary, burst_summary, on="Threshold")
 
-
 def calculate_basin_thresholds(dataset, category_group, basin, std_dev=None, threshold_type=None):
-    if threshold_type is None:
-        threshold_type = ''
+    """
+    Create DataFrame of calculated basin-level thresholds for the specified basin, category group.
+
+    Parameters:
+    - dataset: DataFrame of lightning count time bins with threshold values (not aggregated to TC level)
+    - category_group: Specify which category grouping the input data is for (valid values: "0-2", "1-2", "3-5", "all")
+    - basin: Basin to generate summary for (valid values: "ATL", "EPAC", "WPAC", "IO", "SHEM", "CPAC")
+    - std_dev: Optional parameter to specify how many standard deviations away from the mean/median to set the threshold value to,
+                default value is 2
+    - threshold_type: Optional parameter to specify if the threshold is based off "effective" thresholds
+
+    Returns:
+    - DataFrame with basin, category group, mean-based calculated threshold, median-based calculated threshold
+    """
+    # Define valid values
     valid_categories = ["0-2", "1-2", "3-5", "all"]
     valid_basins = ["ATL", "EPAC", "WPAC", "IO", "SHEM", "CPAC"]
     threshold_names = {
@@ -633,9 +715,14 @@ def calculate_basin_thresholds(dataset, category_group, basin, std_dev=None, thr
         return(print(f"Not a valid category grouping. Choose either: {', '.join(valid_categories)}"))
     elif basin not in valid_basins:
         return(print(f"Not a valid basin. Choose either: {', '.join(valid_basins)}"))
-    # Set defaults std dev value
+
+    # Set threshold_type to blank if not passed-in
+    if threshold_type is None:
+        threshold_type = ''
+    # Set default std dev value
     if std_dev is None:
         std_dev = 2
+
     # Create dictionary of thresholds
     calculated_thresholds = {
         "Basin": [basin for i in range(len(threshold_keys))],
@@ -647,25 +734,48 @@ def calculate_basin_thresholds(dataset, category_group, basin, std_dev=None, thr
 
     return pd.DataFrame(calculated_thresholds)
 
+def create_basin_threshold_dict(threshold_data):
+    """
+    Create dictionary of basin-level thresholds for use in applying basin thresholds to invidividual TCs.
+    Used in summarize_threshold_eval() function.
 
-def create_basin_threshold_dict(summary_data):
-    basin_thresholds_mean = {}
+    Parameters:
+    - threshold_data: DataFrame of basin-level thresholds
+
+    Returns:
+    - basin_thresholds_mean: Dictionary of mean-based threshold values
+    - basin_thresholds_median: Dictionary of median-based threshold values
+    """
+    # Get column names from threshold data
     column_names = {}
-    for col in summary_data.columns:
+    for col in threshold_data.columns:
         if "(Mean-Based)" in col:
             column_names["mean"] = col
         elif "(Median-Based)" in col:
             column_names["median"] = col
-    for i in range(len(summary_data)):
-        basin_thresholds_mean[summary_data["Threshold"][i]] = summary_data[column_names["mean"]][i]
+    # Separate out mean-based threshold values
+    basin_thresholds_mean = {}
+    for i in range(len(threshold_data)):
+        basin_thresholds_mean[threshold_data["Threshold"][i]] = threshold_data[column_names["mean"]][i]
+    # Separate out median-based threshold values
     basin_thresholds_median = {}
-    for i in range(len(summary_data)):
-        basin_thresholds_median[summary_data["Threshold"][i]] = summary_data[column_names["median"]][i]
+    for i in range(len(threshold_data)):
+        basin_thresholds_median[threshold_data["Threshold"][i]] = threshold_data[column_names["median"]][i]
 
     return basin_thresholds_mean, basin_thresholds_median
 
-
 def detect_bursts_basin(group, thresholds):
+    """
+    Evaluate basin-level thresholds on DataFrame group.
+    Used in apply_basin_thresholds() function.
+
+    Parameters:
+    - group: Data to apply thresholds to
+    - thresholds: Dictionary of threshold values to evaluate
+
+    Returns:
+    - group: Data with added Boolean burst column and threshold value column
+    """
     # Use thresholds passed in as dictionary
     for key, value in thresholds.items():
         threshold = value
@@ -674,9 +784,18 @@ def detect_bursts_basin(group, thresholds):
 
     return group
 
-
-
 def apply_basin_thresholds(df, basin_thresholds):
+    """
+    Apply basin-level thresholds on DataFrame group.
+    Calls apply_basin_thresholds() function, used in summarize_threshold_eval() function.
+
+    Parameters:
+    - df: DataFrame to apply thresholds to
+    - basin_thresholds: Dictionary of threshold values to evaluate
+
+    Returns:
+    - bursts: DataFrame with added Boolean burst columns and threshold value columns
+    """
     # drop bins with 0 lightning count
     clean_data = df[df['lightning_count'] != 0]
 
@@ -688,9 +807,18 @@ def apply_basin_thresholds(df, basin_thresholds):
 
     return bursts
 
-
-
 def column_rename_helper(threshold_data, threshold_type=None):
+    """
+    Helper function to rename columns in DataFrame. Used to prevent duplicate column names.
+    Called by summarize_threshold_eval() function.
+
+    Parameters:
+    - threshold_data: DataFrame of calculated threshold values
+    - threshold_type: Optional parameter to specify if thresholds are calculated using "effective" burst threshold values
+
+    Returns:
+    - column_names: Dictionary to use in renaming DataFrame columns.
+    """
     # Set default value for threshold_type to blank string
     if threshold_type is None:
         threshold_type = ''
@@ -707,8 +835,24 @@ def column_rename_helper(threshold_data, threshold_type=None):
     }
     return column_names
 
-
 def summarize_threshold_eval(summary_data, lightning_data, threshold_data, threshold_type=None):
+    """
+    Apply basin-level thresholds to lightning bin data and add aggregated summary to summary data.
+    Calls create_basin_threshold_dict(), apply_basin_thresholds(), create_tc_summary(), column_rename_helper(), create_burst_summary()
+
+    Parameters:
+    - summary_data: DataFrame of aggregated threshold-related statistics for the basin
+    - lightning_data: DataFrame with time bins to evaluate the basin-thresholds with
+    - threshold_data: DataFrame of calculated threshold values
+    - threshold_type: Optional parameter to specify if thresholds are calculated using "effective" burst threshold values
+
+    Returns:
+    - summary_data: summary_data DataFrame with added columns for applied threshold (burst count, percentage, threshold value)
+    - bursts_mean: DataFrame at time bin level with Boolean indicators for detected bursts for mean-based thresholds
+    - tc_summary_mean: DataFrame aggregated to TC level with burst counts, time bin counts, percentages for mean-based thresholds
+    - bursts_median: DataFrame at time bin level with Boolean indicators for detected bursts for median-based thresholds
+    - tc_summary_median: DataFrame aggregated to TC level with burst counts, time bin counts, percentages for median-based thresholds
+    """
     # Create threshold dictionaries to apply at basin level
     mean_thresholds, median_thresholds = create_basin_threshold_dict(threshold_data)
 
@@ -730,19 +874,47 @@ def summarize_threshold_eval(summary_data, lightning_data, threshold_data, thres
     burst_summary_median = burst_summary_median.rename(columns=column_names["median"])
 
     # Add to the basin summary
-    summary_data = pd.merge(summary_data, threshold_data, on=["Threshold", "Basin", "Category Group"]) # this should take care of duplicates?
+    summary_data = pd.merge(summary_data, threshold_data, on=["Threshold", "Basin", "Category Group"]) # this should take care of duplicates
     summary_data = pd.merge(summary_data, burst_summary_mean[["Threshold", column_names["mean"]["Burst Count"], column_names["mean"]["Burst Percentage"]]], on="Threshold")
     summary_data = pd.merge(summary_data, burst_summary_median[["Threshold", column_names["median"]["Burst Count"], column_names["median"]["Burst Percentage"]]], on="Threshold")
 
     return summary_data, bursts_mean, tc_summary_mean, bursts_median, tc_summary_median
 
 def combine_mean_median_datasets(mean_data, median_data, std_dev, category_group):
+    """
+    Concatenate mean and median datasets to one DataFrame. Can be used for both time bin and aggregated TC level data.
+
+    Parameters:
+    - mean_data: DataFrame of mean-based threshold evaluated data
+    - median_data: DataFrame of median-based threshold evaluated data
+    - std_dev: Number of standard deviations used in the threshold calculation (e.g. 2, 1.5)
+    - category_group: Specify which category grouping the input data is for (valid values: "0-2", "1-2", "3-5", "all")
+
+    Returns:
+    - Concatenated DataFrame of the two input datasets + 3 columns identifying standard deviations, calculation type (mean/median), and category group
+    """
+    # Check for valid input
+    valid_categories = ["0-2", "1-2", "3-5", "all"]
+    if category_group not in valid_categories:
+        return(print(f"Not a valid category grouping. Choose either: {', '.join(valid_categories)}"))
+    # Add std dev, calculation type, category group to mean/median DataFrames
     mean_data["std_dev"], mean_data["threshold_calc_type"], mean_data["category_group"] = std_dev, "mean", category_group
     median_data["std_dev"], median_data["threshold_calc_type"], median_data["category_group"] = std_dev, "median", category_group
-
+    # Concat and return
     return pd.concat([mean_data, median_data], ignore_index=True)
 
 def filter_effective_thresholds(burst_data):
+    """
+    Filter for "effective" thresholds - thresholds that have at least 1 detected burst (1+ True value).
+    Set threshold values to NaN if burst column is False (not a burst) to prevent inclusion in subsequent calculations.
+
+    Parameters:
+    - burst_data: DataFrame of time bin level data with burst evaluation Boolean values to filter
+
+    Returns:
+    - bursts_effective: DataFrame of only effective bursts and threshold values
+    """
+    # Define column names
     burst_columns = ['burst_iqr1', 'burst_iqr2', 'burst_mad1', 'burst_mad2', 'burst_logn1', 'burst_logn2']
     threshold_cols = ['mad1_threshold', 'mad2_threshold', 'iqr1_threshold', 'iqr2_threshold', 'logn1_threshold', 'logn2_threshold']
     # Filter data to only those with at least one "True" value in the burst columns, grouped by storm code
