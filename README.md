@@ -20,11 +20,11 @@ UW MSDS Capstone Project with Northwest Research Associates
 <a id="objective"></a>
 
 ## Objective
-
+[wip]
 <a id="background"></a>
 
 ## Background Information
-
+[wip]
 NWRA provided [WWLLN](https://wwlln.net/) and track data from 2010-2020, with 984 total TCs in the dataset. For this project, we only look at TCs of category 1 or higher (as defined by the Saffir-Simpson Hurricane Wind Scale provided below), leaving us with 479 TCs for the lightning burst evaluation.
 
 ** flesh out later
@@ -86,14 +86,17 @@ Intermediate files that are too large to upload to Github can be found here, alo
 |   └── rainband_threshold_summary.csv
 ├── data_pipeline
 |   └── data
+|       └── innercore_timebin_joined.csv
+|       └── rainband_shear_timebin_joined.csv
+|   └── intermediate_data
 |       └── ...
 |   └── README.md
 |   └── data_file_cleaning.ipynb
 |   └── data_processing.ipynb
 |   └── data_upload.ipynb
 |   └── rainband_data.ipynb
-|   └── shear_data_file_log.txt
 ├── exploratory_analysis
+|   └── README.md
 |   └── basin_descriptive_analysis.ipynb
 |   └── exploratory_analysis.ipynb
 ├── intensification_analysis
@@ -114,7 +117,10 @@ Intermediate files that are too large to upload to Github can be found here, alo
 |   └── lightning_threshold_rainband.ipynb
 |   └── vis_upload.ipynb
 ├── LICENSE
-└── README.md
+├── README.md
+├── requirement.yml
+├── requirement_simplified.yml
+└── shear_quadrant_graphic.png
 ```
 
 Detailed documentation on code requirements and file outputs can be found in each folder's README file.
@@ -122,7 +128,7 @@ Detailed documentation on code requirements and file outputs can be found in eac
 <a id="deliverables"></a>
 
 ## Repository Components
-
+ [wip]
 ### Data Pipeline
 
 ### Lightning Burst Identification
@@ -171,14 +177,14 @@ conda env list
 <a id="data"></a>
 
 ### Data
-
+ [wip]
 
 <a id="future-work"></a>
 
 ## Future Work
 Due to time constraints, we note the following as future work to continue building on the analysis presented in this repository:
 - Lightning burst identification accuracy improvements:
-    - Removing landfall from lightning burst analysis - remove data points where TC storm center is within 100km of land
+    - Removing landfall from lightning burst analysis - remove data points where TC storm center is within 100km of land since landfall is associated with higher lightning activity regardless of storm intensification stage
 - Lightning burst dashboard improvements:
     - Alternatives to using Python visualizations in Power BI due to limitations (developers need Python installed, cannot publish to Power BI web, etc.)
     - Prevent burst markers from overlapping when there are multiple markers on one lightning bin for readability
@@ -186,3 +192,9 @@ Due to time constraints, we note the following as future work to continue buildi
     - WWLLN data tends to include more intense lightning strokes due to the nature of the data collection methods. Using GLM data to perform the same analysis may yield more insightful results.
 - Machine learning in lightning burst detection:
     - The use of machine learning to detect lightning bursts may show unexpected patterns, and can be a more flexible method of identifying lightning bursts than the ones used in this project.
+
+## Acknowledgements
+
+Thank you to our sponsors, Dr. Jeremy Thomas and Dr. Natalia Solorzano at NWRA, for making this project happen.
+
+WWLLN Data Acknowledgment - The authors are using data from the World Wide Lightning Location Network, a collaborative consortium of over 70 worldwide collaborators, managed at the University of Washington.
