@@ -13,6 +13,12 @@
 ### Directory Overview
 
 The files in this directory include:
+- **`dashboard_documentation.ipynb`**
+    - documentation for Power BI dashboard (`lightning_burst_dashboard.pbix`)
+    - includes user guide and developer guide
+- **`lightning_burst_dashboard.pbix`**
+    - Power BI dashboard visualizing detected bursts in graphical and tabular form
+    - includes both inner core and rainband lightning types
 - **`lightning_threshold_functions.py`**
     - contains functions used in both inner core and rainband analyses
     - functions include:
@@ -26,16 +32,12 @@ The files in this directory include:
     - applies threshold calculation, TC plotting functions to inner core dataset
     - identifies lightning bursts at individual TC level and basin level (excluding CPAC)
     - generates .png files of TC wind/pressure/lightning/burst plots
-    - creates data files used in intensification analysis and dashboard
+    - creates data files used in intensification analysis and dashboard ([analysis_data/](../analysis_data/))
 - **`lightning_threshold_rainband.ipynb`**
     - applies threshold calculation, TC plotting functions to rainband dataset
     - identifies lightning bursts at individual TC level and sorts them into shear quadrants
     - generates .png files of TC wind/pressure/lightning/burst plots at both overall and shear quadrant granularity
-    - creates data files used in intensification analysis and dashboard
-- **`lightning_burst_dashboard.pbix`**
-    - Power BI dashboard visualizing detected bursts in graphical and tabular form
-    - includes both inner core and rainband lightning types
-    - documentation can be found in [`dashboard_documentation.md`](dashboard_documentation.md)
+    - creates data files used in intensification analysis and dashboard ([analysis_data/](../analysis_data/))
 - **`vis_upload.ipynb`**
     - uploads visualizations in `visualizations/` directory to specified Google Drive folder
     - requires [Google Drive API](https://developers.google.com/drive/api/guides/about-sdk)
@@ -50,7 +52,7 @@ The files in this directory include:
 <a id="methods"></a>
 
 ### Lightning Burst Detection Methods
-We define a lightning "burst" as a time period with a spike in lightning relative to the storm's overall lightning. In this section of the project, we seek to calculate lightning burst thresholds using statistical methods for each storm, and also explore basin-level lightning burst thresholds.
+We define a lightning "burst" as a time period, specifically a 30-minute time bin, with a spike in lightning relative to the storm's overall lightning.  In this section of the project, we seek to calculate lightning burst thresholds using statistical methods for each storm, and also explore basin-level lightning burst thresholds.
 We log transform the lightning counts per time bin and then calculate a lightning burst threshold based off each storm's log-lightning count distribution. Note that thresholds are evaluated off the log-lightning count, and threshold numbers are also represented on the log scale. We do not include counts associated with wind speeds less than 40 knots, and we do not include time bins with 0 lightning counts in the calculation of our thresholds.
 
 In the lightning burst detection process, we use the following 6 threshold methods (referred to by the names in parentheses hereafter):
