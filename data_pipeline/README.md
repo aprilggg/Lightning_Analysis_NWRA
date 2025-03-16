@@ -1,6 +1,7 @@
 # Data Pipeline
 
 * [About Directory](#about)
+* [Calculation Methods](#calculations)
 * [Code Requirements](#requirements)
 * [Output Files](#outputs)
 
@@ -36,6 +37,60 @@ The notebooks should be executed in the following order:
 This directory also includes an [intermediate_data/](intermediate_data/) directory containing the outputted intermediate files from the data pipeline used in subsequent data pipeline activities. Files used for subsequent analysis are in the [data/](data/) folder.
 
 *note that intermediate data files too large for upload to Github can be found in this [Google Drive folder](https://drive.google.com/drive/folders/105AYgecVORsUCyOwinQRfb--TC0hhBva?usp=drive_link). These should be placed in the `intermediate_data/` directory.
+
+<a id="calculations"></a>
+
+### Calculation Methods
+The data pipeline performs the following calculations on the data:
+#### Inner Core/Rainband Lightning
+We define inner core lightning to be lightning strokes within 100 km of storm center, and rainband lightning to be lightning strokes between 200 and 400 km of storm center.
+
+#### Intensification Stages
+Intensification stages are defined using the following table:
+
+**Intensification Stage Bins**
+| Intensification Stage | Change in Winds (Knots) in 24 Hours (Jiang and Ramirez, 2013)|
+| --------------------- | ----------------------|
+| Rapidly Weakening | <-30 |
+| Weakening | -30 to -10 |
+| Neutral | -10 to 10 |
+| Intensifying | 10 to 30 |
+| Rapidly Intensifying | >30 |
+
+A simplified 3 stage definition combines the Rapidly Weakening with the Weakening stage, and the Rapidly Intensifying with Intensifying stage.
+
+#### Category
+Categories are defined using the following [Saffir-Simpson Hurricane Wind Scale](https://www.nhc.noaa.gov/aboutsshws.php):
+
+**TC Category Bins - Saffir-Simpson Hurricane Wind Scale**
+| TC Category | Sustained Winds (Knots) |
+|  ---------- | ------------|
+| 1 | 64-82 kt |
+| 2 | 83-95 kt |
+| 3 | 96-112 kt |
+| 4 | 113-136 kt |
+| 5 | 137 kt or higher |
+
+We use the term "current category" to refer to the category of the storm at the given point in time, while the overall TC category is defined using the maximum wind speeds over the duration of the TC.
+
+#### Shear Quadrant
+Vertical wind shear is the change in wind speed or direction with altitude, represented by a vector showing the difference between wind vectors at different heights. We use the shear vector angle to calculate the shear vector, shown below in the diagram.
+
+<img src="shear_quadrant_graphic.png" width="200" height="200">
+
+We calculate shear quadrant for rainband lightning using the following formulas.
+
+We use the formula to get the shear angle:
+```
+shearAngleCG = geoAngleCG - shearAngle
+```
+We calculate geoAngleCG (geographic angle of lightning relative to North, where lightning due East of the storm center would give an angle of 90 degrees) using arctan and the distance east/north of the storm center. shearAngle is provided in the `.mat` dataset and included in the `unbinned_shear_data.txt` file.
+
+We then assign the lightning event to a shear quadrant using shearAngleCG: (note that the shear vector in the diagram is going towards the right, while the shear angle is calculated relative to North)
+- 0-90 - Downshear Left (DL)
+- 90-180 - Downshear Right (DR)
+- 180-270 - Upshear Right (UR)
+- 270 -360 - Upshear Left (UL)
 
 <a id="requirements"></a>
 
