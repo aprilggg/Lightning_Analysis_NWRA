@@ -286,6 +286,11 @@ For more information on data table relationships, refer to this [official docume
 
 ### Dashboard Components
 
+This dashboard is composed of the following 3 types of visualizations:
+- Python visualization
+- Slicer
+- Table
+
 <a id="python"></a>
 
 ### Python Visualizations
