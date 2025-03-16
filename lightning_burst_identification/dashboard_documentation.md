@@ -160,9 +160,11 @@ The dashboard uses the following files from the [analysis_data](../analysis_data
 These files are created in the `lightning_threshold_innercore.ipynb` and `lightning_threshold_rainband.ipynb` notebooks in this folder.
 
 To transform the data and update data source paths, click the drop-down arrow next to the table with pencil icon at the top banner on the report view of the dashboard.
+
 ![transform data menu](images/dashboard_13.png)
 
 Select "Data source settings" to check current file paths and update the data file paths - this is necessary if the source data changes and for viewing the data transformations applied to the source files.
+
 ![data source settings](images/dashboard_15.png)
 
 **!!!!To add more data sources,[wip marker]**
@@ -171,9 +173,11 @@ Select "Data source settings" to check current file paths and update the data fi
 Transformations are applied to each of the files to faciliate the relationships between tables explained in the next section. We need to create a column with unique values to use as a primary key for the relationships, so we concatenate storm codes with time bins (+ shear quadrants for rainband).
 
 Select "Transform data" to see the transformation steps for each data source.
+
 ![transform data page](images/dashboard_14.png)
 
 When clicking on each step on the right (in the Applied Steps menu), the upper box will show the [Power Query M code](https://learn.microsoft.com/en-us/powerquery-m/) used to apply the transformations.
+
 ![power query m](images/dashboard_16.png)
 
 Transformations applied (Applied Steps menu on the right) to each inner core data file using the Transform data page:
