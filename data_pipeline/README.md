@@ -76,7 +76,7 @@ We use the term "current category" to refer to the category of the storm at the 
 #### Shear Quadrant
 Vertical wind shear is the change in wind speed or direction with altitude, represented by a vector showing the difference between wind vectors at different heights. We use the shear vector angle to calculate the shear vector, shown below in the diagram.
 
-<img src="shear_quadrant_graphic.png" width="200" height="200">
+<img src="../shear_quadrant_graphic.png" width="200" height="200">
 
 We calculate shear quadrant for rainband lightning using the following formulas.
 
