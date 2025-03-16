@@ -187,7 +187,7 @@ Due to time constraints, we note the following as future work to continue buildi
 - Lightning burst identification accuracy improvements:
     - Removing landfall from lightning burst analysis - remove data points where TC storm center is within 100km of land since landfall is associated with higher lightning activity regardless of storm intensification stage
 - Lightning burst dashboard improvements:
-    - Alternatives to using Python visualizations in Power BI due to limitations (developers need Python installed, cannot publish to Power BI web, etc.)
+    - Alternatives to using Python visualizations in Power BI due to limitations (users need Python installed, cannot publish to Power BI web, etc.)
     - Prevent burst markers from overlapping when there are multiple markers on one lightning bin for readability
 - Inclusion of GLM data:
     - WWLLN data tends to include more intense lightning strokes due to the nature of the data collection methods. Using GLM data to perform the same analysis may yield more insightful results.

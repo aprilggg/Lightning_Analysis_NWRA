@@ -13,6 +13,8 @@ This document provides usage and development guides for the `lightning_burst_das
         * [Python Visualizations](#python)
 * [Future Work and Improvements](#future)
 
+Official Power BI documentation can be found [here](https://learn.microsoft.com/en-us/power-bi/).
+
 <a id="dependencies"></a>
 
 ## Dependencies and Set Up
@@ -175,7 +177,7 @@ Select "Data source settings" to check current file paths and update the data fi
 
 ![data source settings](images/dashboard_15.png)
 
-**!!!!To add more data sources,[wip marker]**
+To add more data sources, refer to this [official documentation](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connect-to-data).
 
 #### Data Transformations
 Transformations are applied to each of the files to faciliate the relationships between tables explained in the next section. We need to create a column with unique values to use as a primary key for the relationships, so we concatenate storm codes with time bins (+ shear quadrants for rainband).
