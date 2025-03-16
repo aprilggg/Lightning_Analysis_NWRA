@@ -83,8 +83,8 @@ In the lightning burst detection process, we use the following 6 threshold metho
         - Equation: threshold = Q3 + 1.5 * IQR
 - [Lognormal](https://en.wikipedia.org/wiki/Log-normal_distribution)
     - IQR is defined as: `SD = e^(μ + (σ² / 2)) * √(e^(σ²) - 1)` where:
-        - `\mu` = Mean of the associated normal distribution
-        - `\sigma` = Standard deviation of the associated normal distribution
+        - `μ` = Mean of the associated normal distribution
+        - `σ` = Standard deviation of the associated normal distribution
         - `e` = Euler's number (≈ 2.718)
     - 2 Standard Deviations (**LOGN1**)
         - This method sets the threshold to be 2 standard deviations higher than the mean log-lightning count
