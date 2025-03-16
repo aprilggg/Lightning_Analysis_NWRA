@@ -48,6 +48,8 @@ In this section, we go over how to use and interpret the visualizations included
 
 The dashboard opens to this view with tabs at the bottom. Each tab contains a different set of visualizations and can be filtered using the slicer on the right-hand side. Slicers are synced between the inner core tabs and the rainband tabs.
 
+The Power BI "Visualizations" and "Data" panels to the right of the dashboard can be collapsed to enhance the user experience.
+
 ![overview](images/dashboard_3.png)
 
 #### Tabs
@@ -58,6 +60,12 @@ The dashboard includes 6 tabs:
 - Rainband Shear Quad - Intensification
 - Rainband Shear Quad - Current Category
 - Rainband TC Burst Data
+
+Select a tab by clicking on the tab at the bottom of the dashboard. Some tabs may be hidden depending on monitor - use the arrows at the bottom left side of the tab ribbon to navigate and view any hidden tabs.
+
+Each tab's view can be adjusted by clicking on "Page view" in the View tab at the top. Users can choose from Fit to page, Fit to width, or Actual size. Users can also manually zoom in and out on each tab to adjust the view to personal preference.
+
+![page view](images/dashboard_30.png)
 
 #### Filtering the Dashboard
 ![slicer](images/dashboard_2.png)
@@ -287,14 +295,132 @@ For more information on data table relationships, refer to this [official docume
 ### Dashboard Components
 
 This dashboard is composed of the following 3 types of visualizations:
-- Python visualization
-- Slicer
+- Python Visualization
 - Table
+- Slicer
 
 <a id="python"></a>
 
-### Python Visualizations
+#### Python Visualizations
+Used in:
+- Inner Core TC Plots
+- Rainband TC Plots
+- Rainband Shear Quad - Intensification
+- Rainband Shear Quad - Current Category
+
+The graphs in the dashboard are created using [Python visualizations](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-python-visuals) using Power BI's built-in Python visual option. Note that Power BI does not support Python visualizations in the web distribution (only supported in Power BI Desktop).
+
+To edit a Python visualization, click on the visualization. Notice the gray bar at the bottom - the ^ button expands the script editor, while the play button at the very right will run the code for the visualization.
+
+![python script visual](images/dashboard_27.png)
+
+Click the ^ button to view the Python code.
+
+![python script](images/dashboard_28.png)
+
+A simple rundown of the code: In Power BI Python visualizations, "dataset" refers to the data being passed in to the visualization. We start by importing necessary libraries (pandas, matplotlib), and then creating a check for if the dataset includes only one TC. If the dataset contains more than 1 TC, we show "Please select only one TC" to prevent overloading the visualization with excessive amounts of data that will lead to Power BI crashing. After perfoming this check, we proceed to plot the lightning counts, wind speed, pressure, detected bursts, and color-code the background. This code is similar to the functions in [`lightning_threshold_functions.py`](lightning_threshold_functions.py).
+
+The Python visualization requires that the columns used in the code are included in the "Values" section of the Visualizations panel on the right. We can include columns from multiple tables because we have the relationship set up in the data model. The Data panel will show a green check mark by the tables that this visualization uses. Both the Visualizations and Data panels can be expanded and collapsed using the >> button at the top of the right-hand panel.
+
+![python data variables](images/dashboard_29.png)
+
+Visualization titles and title formatting can be edited in the "Title" section of the "Format visual" part of the Visualizations panel.
+
+![python title](images/dashboard_36.png)
+
+**Columns Used In Python Visualizations:**
+- lightning_count (lightning_data)
+- knots (lightning_data)
+- pressure (lightning_data)
+- time_bin (lightning_data)
+- Current_Category (lightning_data)
+- Intensification_Category_3 (lightning_data)
+- storm_code (lightning_data)
+- storm_name (lightning_data)
+- burst_iqr1 (bursts)
+- burst_iqr2 (bursts)
+- burst_logn1 (bursts)
+- burst_logn2 (bursts)
+- burst_mad1 (bursts)
+- burst_mad2 (bursts)
+- shear_quad (lightning_data, rainband shear quadrant visualizations only)
+
+#### Tables
+Used in:
+- Inner Core TC Burst Data
+- Rainband TC Burst Data
+
+![tables](images/dashboard_31.png)
+
+The tables in this dashboard use the bursts tables and incorporates color-coding for the burst detection cells. Columns to display in the table need to be included in the "Columns" section of the Visualizations tab on the right side. The Data panel will show a green check mark by the tables that the table uses. By default, each column added to the table will be named the same way as the column name in the data table. Right click or click the drop-down button on the column in the Columns panel to rename the column in the table - select "Rename for this visual".
+
+**Cell Color-coding:**
+
+The MAD1 Burst, MAD2 Burst, IQR1 Burst, IQR2 Burst, Lognormal1 Burst, Lognormal2 Burst columns use color-coding of the cells to denote if a burst is detected. To set up or edit the color-coding, first navigate to the Format visual tab of the Visualizations panel.
+
+![cell elements menu](images/dashboard_32.png)
+
+Expand the "Cell elements" part of the panel and select the column of interest from the "Series" dropdown. Toggle the background color to On and open the Conditional formatting menu by clicking on the "fx" button.
+
+![conditional formatting menu](images/dashboard_33.png)
+
+The conditional formatting menu allows for coloring the cell by specific rules. We use the burst_method_me/burst_method_measure custom measures here, where the value of the measure will determine the color of the cell. We set the rule to be if the measure value is 1, we color the cell. The measure is encoded in a way that a False value = 0, and a True value = 1. We retain the colors from the graphs for the 6 threshold methods.
+
+The official Power BI documentation for conditional formatting can be found [here](https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-conditional-table-formatting).
+
+**Columns Used In Tables (all from bursts tables):**
+- basin
+- year
+- storm_name
+- time_bin
+- knots
+- pressure
+- Intensification_Category_5
+- Current_Category
+- lightning_count
+- burst_mad1
+- burst_mad2
+- burst_iqr1
+- burst_iqr2
+- burst_logn1
+- burst_logn2
+- shear_quad (rainband only)
+
+#### Slicers
+Slicers are used in every tab of the dashboard. Slicers are synced across the inner core tabs and rainband tabs separately. The order of the columns in the "Field" section of the Visualizations panel determines the displayed hierarchy on the slicer.
+
+![slicer](images/dashboard_34.png)
+
+Slicers are set up to be single-select, but may allow for a single-selection of a parent column that results in multiple selected child TCs (e.g. it is possible to single-select a basin for a year but end up selecting all the TCs in that basin/year). The visualizations are set up in a way that prevents the dashboard from crashing if this happens, and users can just select the specific storm again.
+
+![slicer settings](images/dashboard_35.png)
+
+Toggle the single-select option in the "Format visual" tab of the Visualization panel. The Slicer's name can also be changed here in the "Slicer header" section.
+
+Slicer sync settings can be edited by clicking the "Sync slicers" option at the top in the View ribbon. If a slicer is not already selected on the visualization, select one to edit.
+
+![Sync slicers](images/dashboard_37.png)
+
+This will open the Sync slicers menu, where you can select which pages this slicer is synced with. Currently, the inner core tabs are synced separately from the rainband tabs.
+
+![Sync slicers selection](images/dashboard_38.png)
+
+**Columns Used In Slicers (all from lightning_data tables):**
+- storm_year
+- basin
+- storm_display_name
 
 <a id="future"></a>
 
 ## Future Work and Improvements
+
+Some improvements, future work, and considerations for this dashboard include:
+- Creating the Python visualizations using other visualization types
+    - Due to the limitations on Python visualizations in Power BI as well as the requirements for running Python visualizations, changing the visualizations to use other more widely-supported visualization types will make the dashboard more accessible
+- Burst marker overlap in the graphs
+    - Burst markers overlap and make it hard to see all the burst detection methods at once
+    - The current alternative is using the table to supplement the graph by displaying the color-coded burst detections in a tabular manner
+    - Future work may include finding a method to prevent burst marker overlap
+- Adding/updating data sources
+    - The data files used in this dashboard are static
+    - To update existing data sources, developers need to ensure that the column structure matches the files currently being used (refer to [analysis_data/README.md](../analysis_data/README.md))
