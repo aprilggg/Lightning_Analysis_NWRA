@@ -8,7 +8,7 @@ This document provides usage and development guides for the `lightning_burst_das
     * [Inner Core Visualizations](#inner-core)
     * [Rainband Visualizations](#rainband)
 * [Developer Guide](#dev)
-    * [Data Model](#data)
+    * [Data Setup](#data)
     * [Dashboard Components](#components)
         * [Python Visualizations](#python)
 * [Future Work and Improvements](#future)
@@ -17,23 +17,20 @@ This document provides usage and development guides for the `lightning_burst_das
 
 ## Dependencies and Set Up
 
-** check if necessary for all or just development??
+This dashboard requires [Power BI Desktop](https://learn.microsoft.com/en-us/power-bi/fundamentals/desktop-get-the-desktop). Users are not required to have the source data files on their local machine if the data does not need to be refreshed.
 
-This dashboard requires [Power BI Desktop](https://learn.microsoft.com/en-us/power-bi/fundamentals/desktop-get-the-desktop) and the following files from the [analysis_data](../analysis_data/) directory:
-- `innercore_bursts.csv`
-- `innercore_lightning_data.csv`
-- `rainband_bursts.csv`
-- `rainband_lightning_data.csv`
-
-These files are created in the `lightning_threshold_innercore.ipynb` and `lightning_threshold_rainband.ipynb` notebooks in this folder.
-
-The Python visualizations in this dashboard require installation of Python and the following non-native Python libraries:
+The [Python visualizations](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-python-visuals) in this dashboard require [installation of Python](https://www.python.org/downloads/) and the following non-native Python libraries:
 - pandas
 - matplotlib
 
-Refer to the [Power BI Python visualization documentation](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-python-visuals) for more details.
+Install the above libraries by opening the terminal or command prompt and running the following:
+```
+pip install pandas matplotlib
+```
 
-After installing Power BI Desktop, open the `lightning_burst_dashboard.pbix` file.
+Refer to the [Power BI Python scripts documentation](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-python-scripts) for more details on Python script requirements in Power BI.
+
+After installing Power BI Desktop and setting up the Python requirements, open the `lightning_burst_dashboard.pbix` file.
 
 You will first see a pop-up asking if you wish to enable scripts - click Enable.
 
@@ -145,11 +142,141 @@ This tab displays rainband lightning detected bursts at the time bin level in a 
 
 <a id="dev"></a>
 
-## Development Guide
+## Developer Guide
+
+This section goes over the data model setup, dashboard components, and an explanation of the Python visualizations in this dashboard. This section is geared towards developers and includes a section on improvements and expansions for future use.
 
 <a id="data"></a>
 
-### Data Model
+### Data Setup
+
+#### Data Sources
+The dashboard uses the following files from the [analysis_data](../analysis_data/) directory:
+- `innercore_bursts.csv`
+- `innercore_lightning_data.csv`
+- `rainband_bursts.csv`
+- `rainband_lightning_data.csv`
+
+These files are created in the `lightning_threshold_innercore.ipynb` and `lightning_threshold_rainband.ipynb` notebooks in this folder.
+
+To transform the data and update data source paths, click the drop-down arrow next to the table with pencil icon at the top banner on the report view of the dashboard.
+![transform data menu](images/dashboard_13.png)
+
+Select "Data source settings" to check current file paths and update the data file paths - this is necessary if the source data changes and for viewing the data transformations applied to the source files.
+![data source settings](images/dashboard_15.png)
+
+**!!!!To add more data sources,[wip marker]**
+
+#### Data Transformations
+Transformations are applied to each of the files to faciliate the relationships between tables explained in the next section. We need to create a column with unique values to use as a primary key for the relationships, so we concatenate storm codes with time bins (+ shear quadrants for rainband).
+
+Select "Transform data" to see the transformation steps for each data source.
+![transform data page](images/dashboard_14.png)
+
+When clicking on each step on the right (in the Applied Steps menu), the upper box will show the [Power Query M code](https://learn.microsoft.com/en-us/powerquery-m/) used to apply the transformations.
+![power query m](images/dashboard_16.png)
+
+Transformations applied (Applied Steps menu on the right) to each inner core data file using the Transform data page:
+1. Source - import source data
+2. Promoted Headers - read the first line of the file as headers
+3. Changed Type - cast each column as its respective type (e.g. time_bin as datetime)
+4. Duplicated Column - created a copy of the time_bin column
+5. Changed Type - changed the type of the time_bin copy column to text instead of datetime
+6. Added Custom - added a custom column concatenating the storm code with time bin
+7. Renamed Columns - rename the previous added column to "storm_code_time_bin"
+8. Removed Columns - remove the duplicated time bin column
+
+Transformations applied to the rainband files:
+1. Source - import source data
+2. Promoted Headers - read the first line of the file as headers
+3. Changed Type - cast each column as its respective type (e.g. time_bin as datetime)
+4. Duplicated Column - created a copy of the time_bin column
+5. Changed Type - changed the type of the time_bin copy column to text instead of datetime
+6. Custom1 - added a custom column concatenating the storm code with time bin
+7. Renamed Columns - rename the previous added column to "storm_code_time_bin"
+8. Custom2 - added a custom column concatenating the storm name with storm_code_time_bin
+9. Renamed Columns1 - rename the previous added column to "storm_code_time_bin_name"
+10. Custom3 - added a custom column concatenating the storm_code_time_bin_name with shear quadrant
+11. Renamed Column2 - rename the previous added column to "storm_code_time_bin_shear"
+12. Removed Columns - remove the duplicated time bin column
+
+#### Data Model - Custom Columns
+
+Navigate to the Data Model view using the menu on the left bar.
+
+![data model view](images/dashboard_18.png)
+
+Here, we see the 4 data tables and the relationships in a diagram format. The tab on the right side shows each table, and can be expanded to view each column along with its data type for the table.
+
+![data model view](images/dashboard_17.png)
+
+The calculator icon denotes that the column is an added custom measure column. The top bar will display the custom measure's code. This code is in [DAX](https://learn.microsoft.com/en-us/dax/) syntax.
+
+![measure](images/dashboard_19.png)
+
+Similarly, the icons with a table in the back and either fx or a sigma also denotes a custom column. The top bar will display the custom column's code. This code is in [DAX](https://learn.microsoft.com/en-us/dax/) syntax.
+
+![custom column](images/dashboard_20.png)
+
+An easy way to check if the column is a custom column added in this menu or not is by clicking on the column name in the right-hand menu. If the top bar is grayed out or missing, the column is from the source data (or added in the transformations stage). If the top bar has code, the column is a custom column added using [DAX](https://learn.microsoft.com/en-us/dax/) syntax.
+
+![ex 1](images/dashboard_21.png)
+A blank/grayed out top bar.
+
+![ex2](images/dashboard_22.png)
+
+DAX code for the storm_display_name column.
+
+**innercore_bursts custom columns:**
+- burst_iqr1_me - used to color-code IQR1 burst detection cells in the Inner Core TC Burst Data tab
+- burst_iqr2_me - used to color-code IQR2 burst detection cells in the Inner Core TC Burst Data tab
+- burst_logn1_me - used to color-code LOGN1 burst detection cells in the Inner Core TC Burst Data tab
+- burst_logn2_me - used to color-code LOGN2 burst detection cells in the Inner Core TC Burst Data tab
+- burst_mad1_me - used to color-code MAD1 burst detection cells in the Inner Core TC Burst Data tab
+- burst_mad2_me - used to color-code MAD2 burst detection cells in the Inner Core TC Burst Data tab
+- storm_code_name - concatenates storm code with storm name
+
+**innercore_lightning_data custom columns:**
+- storm_code_name - concatenates storm code with storm name
+- storm_display_name - formats the storm name by adding the storm number to the end in parentheses, parses out the storm number from the storm code
+- storm_year - parses out the storm year from the storm code instead of using the year in the data (some storms include data for two years but are only attributed to one)
+
+**rainband_bursts custom columns:**
+- burst_iqr1_measure - used to color-code IQR1 burst detection cells in the Inner Core TC Burst Data tab
+- burst_iqr2_measure - used to color-code IQR2 burst detection cells in the Inner Core TC Burst Data tab
+- burst_logn1_measure - used to color-code LOGN1 burst detection cells in the Inner Core TC Burst Data tab
+- burst_logn2_measure - used to color-code LOGN2 burst detection cells in the Inner Core TC Burst Data tab
+- burst_mad1_measure - used to color-code MAD1 burst detection cells in the Inner Core TC Burst Data tab
+- burst_mad2_measure - used to color-code MAD2 burst detection cells in the Inner Core TC Burst Data tab
+- storm_code_name - concatenates storm code with storm name
+
+**rainband_lightning_data custom columns:**
+- storm_code_name - concatenates storm code with storm name
+- storm_display_name - formats the storm name by adding the storm number to the end in parentheses, parses out the storm number from the storm code
+- storm_year - parses out the storm year from the storm code instead of using the year in the data (some storms include data for two years but are only attributed to one)
+
+#### Data Model - Relationships
+
+To view the relationships in the data model, click the relationships icon on the top banner of the Home tab.
+
+![relationships icon](images/dashboard_23.png)
+
+This will open the relationships view, where relationships can be added or edited.
+
+![relationships icon](images/dashboard_24.png)
+
+We set up 2 relationships for this data model, one for the inner core data and one for the rainband data. These relationships ensure that the datasets are synced and properly displayed by preventing duplicates.
+
+We set up a [1-to-1](https://www.geeksforgeeks.org/relationships-in-sql-one-to-one-one-to-many-many-to-many/) relationship for both the inner core and rainband datasets. To view or edit the relationships, either click the three dots at the right side of the relationship or select the check box at the left and click "Edit" at the top.
+
+![relationships edit button](images/dashboard_25.png)
+
+The Edit page will allow you to select the tables to form a relationship between, and select the column to use as the key between the two tables. We use the storm_code_time_bin column for the inner core tables, and the storm_code_time_bin_shear column for the rainband tables. Note that a 1-to-1 relationship requires that both columns contain unique values. Ensure that the "Make this relationship active" box is checked at the bottom to apply the relationship to the data.
+
+![relationships edit page](images/dashboard_26.png)
+
+For more information on data table relationships, refer to this [official documentation](https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-create-and-manage-relationships).
+
 
 <a id="components"></a>
 
