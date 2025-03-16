@@ -267,7 +267,7 @@ To view the relationships in the data model, click the relationships icon on the
 
 This will open the relationships view, where relationships can be added or edited.
 
-![relationships icon](images/dashboard_24.png)
+![relationships view](images/dashboard_24.png)
 
 We set up 2 relationships for this data model, one for the inner core data and one for the rainband data. These relationships ensure that the datasets are synced and properly displayed by preventing duplicates.
 
