@@ -1,6 +1,6 @@
 # Lightning Burst Dashboard User & Development Guide
 
-This document provides usage and development guides for the `lightning_burst_dashboard.pbix` Power BI dashboard included in this directory. This dashboard includes visualizations created in `lightning_threshold_innercore.ipynb` and `lightning_threshold_rainband.ipynb` and includes both inner core and rainband data.
+This document provides usage and development guides for the [`lightning_burst_dashboard.pbix`](lightning_burst_dashboard.pbix) Power BI dashboard included in this directory. This dashboard includes visualizations created in `lightning_threshold_innercore.ipynb` and `lightning_threshold_rainband.ipynb` and includes both inner core and rainband data.
 
 * [Dependencies and Set Up](#dependencies)
 * [User Guide](#user)
