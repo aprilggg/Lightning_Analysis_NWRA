@@ -2,6 +2,10 @@
 
 * [About Directory](#about)
 * [Calculation Methods](#calculations)
+    * [Inner Core/Rainband Lightning](#lightning)
+    * [Intensification Stages](#intensification)
+    * [Category](#category)
+    * [Shear Quadrant](#shear)
 * [Code Requirements](#requirements)
 * [Output Files](#outputs)
 
@@ -42,8 +46,20 @@ This directory also includes an [intermediate_data/](intermediate_data/) directo
 
 ### Calculation Methods
 The data pipeline performs the following calculations on the data:
+
+<a id="lightning"></a>
+
 #### Inner Core/Rainband Lightning
-We define inner core lightning to be lightning strokes within 100 km of storm center, and rainband lightning to be lightning strokes between 200 and 400 km of storm center.
+We define inner core lightning to be lightning strokes ≤100 km of storm center, and rainband lightning to be lightning strokes ≥200 and ≤400 km of storm center. Using the hypotenuse method, we use the distance North and distance East of storm center to calculate the direct distance of each lightning stroke to storm center.
+
+Hypotenuse method:
+```
+direct distance = √((distance North)² + (distance East)²)
+```
+
+Since the distance to center is generally close enough, we use a simplified hypotenuse calculation method instead of the Great Circle method. This method does not account for the curvature of the Earth.
+
+<a id="intensification"></a>
 
 #### Intensification Stages
 Intensification stages are defined using the following table:
@@ -59,6 +75,8 @@ Intensification stages are defined using the following table:
 
 A simplified 3 stage definition combines the Rapidly Weakening with the Weakening stage, and the Rapidly Intensifying with Intensifying stage.
 
+<a id="category"></a>
+
 #### Category
 Categories are defined using the following [Saffir-Simpson Hurricane Wind Scale](https://www.nhc.noaa.gov/aboutsshws.php):
 
@@ -72,6 +90,8 @@ Categories are defined using the following [Saffir-Simpson Hurricane Wind Scale]
 | 5 | 137 kt or higher |
 
 We use the term "current category" to refer to the category of the storm at the given point in time, while the overall TC category is defined using the maximum wind speeds over the duration of the TC.
+
+<a id="shear"></a>
 
 #### Shear Quadrant
 Vertical wind shear is the change in wind speed or direction with altitude, represented by a vector showing the difference between wind vectors at different heights. We use the shear vector angle to calculate the shear vector, shown below in the diagram.
