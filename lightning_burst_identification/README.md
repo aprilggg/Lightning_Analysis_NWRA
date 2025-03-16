@@ -6,6 +6,7 @@
 * [Output Files](#outputs)
     * [Analysis Data](#analysis-data)
     * [Lightning Burst Threshold Visualizations](#visualizations)
+    * [Lightning Burst Threshold Dashboard](#dashboard)
     * [Inner Core Basin-Level Data](#basin-data)
 
 <a id="directory-overview"></a>
@@ -144,6 +145,11 @@ Visualizations in the [visualizations directory](visualizations/) can also be fo
 *note that not all TCs have shear data available, and as such will not have been included in rainband analysis
 
 The current category background color-coding type includes categories 0-5, while the intensification stages color-coding type includes the simplified intensification stage bins (Weakening, Neutral, Intensifying). The visualizations in this directory are created in [lightning_threshold_innercore.ipynb](lightning_threshold_innercore.ipynb) and [lightning_threshold_rainband.ipynb](lightning_threshold_rainband.ipynb), which use the functions in [lightning_threshold_functions.py](lightning_threshold_functions.py) to graph each TC. Note that the plotting functions also include a 5 intensification stage color-coding option that we did not generate for this directory.
+
+<a id="dashboard"></a>
+
+#### Lightning Burst Threshold Dashboard
+The visualizations in the `visualizations/` directory are also available in the Power BI dashboard `lightning_burst_dashboard.pbix`. Detailed documentation for this dashboard (including a user guide and developer guide) can be found [here](dashboard_documentation.md).
 
 <a id="basin-data"></a>
 

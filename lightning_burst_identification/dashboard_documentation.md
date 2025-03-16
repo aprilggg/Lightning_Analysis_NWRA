@@ -6,7 +6,7 @@ This document provides usage and development guides for the `lightning_burst_das
 
 ** check if necessary for all or just development??
 
-This dashboard requires Power BI Desktop and the following files from the [analysis_data](../analysis_data/) directory:
+This dashboard requires [Power BI Desktop](https://learn.microsoft.com/en-us/power-bi/fundamentals/desktop-get-the-desktop) and the following files from the [analysis_data](../analysis_data/) directory:
 - `innercore_bursts.csv`
 - `innercore_lightning_data.csv`
 - `rainband_bursts.csv`
@@ -22,5 +22,9 @@ Refer to the [Power BI Python visualization documentation](https://learn.microso
 
 ## Usage Guide
 
+After installing Power BI Desktop, open the `` file.
+
+You will first see
+![alt text](image.png)
 
 ## Development Guide
