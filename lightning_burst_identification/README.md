@@ -17,6 +17,8 @@ The files in this directory include:
 - **`dashboard_documentation.ipynb`**
     - documentation for Power BI dashboard (`lightning_burst_dashboard.pbix`)
     - includes user guide and developer guide
+- **`images/`**
+    - includes images used in `dashboard_documentation.ipynb`
 - **`lightning_burst_dashboard.pbix`**
     - Power BI dashboard visualizing detected bursts in graphical and tabular form
     - includes both inner core and rainband lightning types
