@@ -31,7 +31,7 @@ Tropical cyclones (TCs) are among the most powerful and destructive weather syst
 
 ### Provided Data
 
-NWRA provided [WWLLN](https://wwlln.net/) lightning and storm track data for TCs across 6 basins from 2010 to 2020, with 984 total TCs in the dataset. For this project, we only include TCs of category 1 or higher in our evaluation of lightning bursts, leaving us with 479 TCs for the lightning burst evaluation and subsequent intensification statistical analysis.
+NWRA provided [WWLLN](https://wwlln.net/) lightning and storm track data for TCs across 6 basins from 2010 to 2020, with 984 total TCs in the dataset. For this project, we only include TCs of category 1 or higher in our evaluation of lightning bursts, leaving us with 472 TCs for the lightning burst evaluation and subsequent intensification statistical analysis.
 
 For each TC in our dataset, we have:
 - World Wide Lightning Location Network (WWLLN) Data: (.txt)
