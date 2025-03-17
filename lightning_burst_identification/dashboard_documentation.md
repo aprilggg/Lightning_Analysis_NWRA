@@ -6,11 +6,23 @@ This document provides usage and development guides for the [`lightning_burst_da
 * [User Guide](#user)
     * [Overview](#overview)
     * [Inner Core Visualizations](#inner-core)
+        * [Inner Core TC Plots](#innercore-plots)
+        * [Inner Core TC Burst Data](#innercore-burst)
     * [Rainband Visualizations](#rainband)
+        * [Rainband TC Plots](#rainband-plots)
+        * [Rainband Shear Quad - Intensification](#shear-i)
+        * [Rainband Shear Quad - Current Catgory](#shear-cc)
+        * [Rainband TC Burst Data](#rainband-burst)
 * [Developer Guide](#dev)
     * [Data Setup](#data)
+        * [Data Sources](#data-sources)
+        * [Data Transformations](#transformations)
+        * [Data Model - Custom Columns](#custom-columns)
+        * [Data Model - Relationships](#relationships)
     * [Dashboard Components](#components)
         * [Python Visualizations](#python)
+        * [Tables](#tables)
+        * [Slicers](#slicers)
 * [Future Work and Improvements](#future)
 
 Official Power BI documentation can be found [here](https://learn.microsoft.com/en-us/power-bi/).
@@ -95,6 +107,8 @@ The following tabs display inner core lightning data:
 - Inner Core TC Plots
 - Inner Core TC Burst Data
 
+<a id="innercore-plots"></a>
+
 #### Inner Core TC Plots
 
 ![inner core tc plots](images/dashboard_4.png)
@@ -104,6 +118,8 @@ This tab displays inner core lightning detected bursts on intensification stage 
 For the intensification stage plot, we only display the 3-category intensification stages - Neutral, Intensifying, and Weakening. Rapidly Weakening and Rapidly Intensifying are combined with Weakening and Intensifying, respectively. The white background denotes the last 24 hours of the storm where we cannot calculate intensification stage using forward-looking 24-hour wind speed differences.
 
 For the current category plot, we color the background using the Saffir-Simpson scale. The white background denotes wind speeds less than 64 knots.
+
+<a id="innercore-burst"></a>
 
 #### Inner Core TC Burst Data
 
@@ -122,6 +138,8 @@ The following tabs display rainband lightning data:
 - Rainband Shear Quad - Current Category
 - Rainband TC Burst Data
 
+<a id="rainband-plots"></a>
+
 #### Rainband TC Plots
 
 ![rainband tc plots](images/dashboard_6.png)
@@ -132,17 +150,23 @@ For the intensification stage plot, we only display the 3-category intensificati
 
 For the current category plot, we color the background using the Saffir-Simpson scale. The white background denotes wind speeds less than 64 knots.
 
+<a id="shear-i"></a>
+
 #### Rainband Shear Quad - Intensification
 
 ![rainband shear quad intensification](images/dashboard_7.png)
 
 This view shows the intensification stage color-coded graph from the Rainband TC Plots tab at the top, and splits the data into each shear quadrant at the bottom for a 2x2 view. The bottom 4 graphs each display lightning counts, detected bursts, and associated wind/pressure data for each one of the 4 shear quadrants over time. The 2x2 view can be used to explore the distribution of detected bursts across the different shear quadrants.
 
+<a id="shear-cc"></a>
+
 #### Rainband Shear Quad - Current Category
 
 ![rainband shear quad current category](images/dashboard_8.png)
 
 This view shows the current category color-coded graph from the Rainband TC Plots tab at the top, and splits the data into each shear quadrant at the bottom for a 2x2 view. The bottom 4 graphs each display lightning counts, detected bursts, and associated wind/pressure data for each one of the 4 shear quadrants over time. The 2x2 view can be used to explore the distribution of detected bursts across the different shear quadrants.
+
+<a id="rainband-burst"></a>
 
 #### Rainband TC Burst Data
 
@@ -159,6 +183,8 @@ This section goes over the data model setup, dashboard components, and an explan
 <a id="data"></a>
 
 ### Data Setup
+
+<a id="data-sources"></a>
 
 #### Data Sources
 The dashboard uses the following files from the [analysis_data](../analysis_data/) directory:
@@ -178,6 +204,8 @@ Select "Data source settings" to check current file paths and update the data fi
 ![data source settings](images/dashboard_15.png)
 
 To add more data sources, refer to this [official documentation](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connect-to-data).
+
+<a id="transformations"></a>
 
 #### Data Transformations
 Transformations are applied to each of the files to faciliate the relationships between tables explained in the next section. We need to create a column with unique values to use as a primary key for the relationships, so we concatenate storm codes with time bins (+ shear quadrants for rainband).
@@ -213,6 +241,8 @@ Transformations applied to the rainband files:
 10. Custom3 - added a custom column concatenating the storm_code_time_bin_name with shear quadrant
 11. Renamed Column2 - rename the previous added column to "storm_code_time_bin_shear"
 12. Removed Columns - remove the duplicated time bin column
+
+<a id="custom-columns"></a>
 
 #### Data Model - Custom Columns
 
@@ -268,6 +298,8 @@ DAX code for the storm_display_name column.
 - storm_code_name - concatenates storm code with storm name
 - storm_display_name - formats the storm name by adding the storm number to the end in parentheses, parses out the storm number from the storm code
 - storm_year - parses out the storm year from the storm code instead of using the year in the data (some storms include data for two years but are only attributed to one)
+
+<a id="relationships"></a>
 
 #### Data Model - Relationships
 
@@ -347,6 +379,8 @@ Visualization titles and title formatting can be edited in the "Title" section o
 - burst_mad2 (bursts)
 - shear_quad (lightning_data, rainband shear quadrant visualizations only)
 
+<a id="tables"></a>
+
 #### Tables
 Used in:
 - Inner Core TC Burst Data
@@ -387,6 +421,8 @@ The official Power BI documentation for conditional formatting can be found [her
 - burst_logn1
 - burst_logn2
 - shear_quad (rainband only)
+
+<a id="slicers"></a>
 
 #### Slicers
 Slicers are used in every tab of the dashboard. Slicers are synced across the inner core tabs and rainband tabs separately. The order of the columns in the "Field" section of the Visualizations panel determines the displayed hierarchy on the slicer.
