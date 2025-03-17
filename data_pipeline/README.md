@@ -106,7 +106,7 @@ shearAngleCG = geoAngleCG - shearAngle
 ```
 We calculate geoAngleCG (geographic angle of lightning relative to North, where lightning due East of the storm center would give an angle of 90 degrees) using arctan and the distance east/north of the storm center. shearAngle is provided in the `.mat` dataset and included in the `unbinned_shear_data.txt` file.
 
-We then assign the lightning event to a shear quadrant using shearAngleCG: (note that the shear vector in the diagram is going towards the right, while the shear angle is calculated relative to North)
+We then assign the lightning stroke to a shear quadrant using shearAngleCG: (note that the shear vector in the diagram is going towards the right, while the shear angle is calculated relative to North)
 - 0-90 - Downshear Left (DL)
 - 90-180 - Downshear Right (DR)
 - 180-270 - Upshear Right (UR)

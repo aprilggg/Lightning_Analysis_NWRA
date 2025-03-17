@@ -1,11 +1,11 @@
 # Lightning-Analysis
-UW MSDS Capstone Project with Northwest Research Associates
+UW MSDS Capstone Project with NorthWest Research Associates (NWRA)
 
 ## Table of Contents
 * [Objective](#objective)
 * [Background Information](#background)
 * [Directory Overview](#directory-overview)
-* [Repository Components](#deliverables)
+* [Key Deliverables](#deliverables)
 * [Dependencies and Setting Up the Repository](#dependencies)
   * [Environment](#environment)
   * [Data](#data)
@@ -21,18 +21,36 @@ UW MSDS Capstone Project with Northwest Research Associates
 <a id="objective"></a>
 
 ## Objective
-[wip]
+- Identify WWLLN lightning bursts for inner core and rainband lightning
+- Investigate the relationship between WWLLN lightning bursts and tropical cyclone intensification stages
+
 <a id="background"></a>
 
 ## Background Information
-[wip]
-NWRA provided [WWLLN](https://wwlln.net/) and track data from 2010-2020, with 984 total TCs in the dataset. For this project, we only look at TCs of category 1 or higher (as defined by the [Saffir-Simpson Hurricane Wind Scale](https://www.nhc.noaa.gov/aboutsshws.php) provided below), leaving us with 479 TCs for the lightning burst evaluation.
+Tropical cyclones (TCs) are among the most powerful and destructive weather systems on Earth, posing significant threats to life, property, and infrastructure. We aim to explore the relationship between lightning bursts in tropical cyclones and tropical cyclone intensification stages using World Wide Lightning Location Network (WWLLN) data and tropical cyclone wind speed and pressure measurements.
 
-** flesh out later
+### Provided Data
 
-inner core defined as <100km of center, rainband defined as 200-400km
+NWRA provided [WWLLN](https://wwlln.net/) lightning and storm track data for TCs across 6 basins from 2010 to 2020, with 984 total TCs in the dataset. For this project, we only include TCs of category 1 or higher in our evaluation of lightning bursts, leaving us with 479 TCs for the lightning burst evaluation and subsequent intensification statistical analysis.
 
-We use the following standards to categorize intensification stage and category based off wind speed in knots.
+For each TC in our dataset, we have:
+- World Wide Lightning Location Network (WWLLN) Data: (.txt)
+    - Lightning strokes with timestamp and distance from storm center
+    - Includes 472 Category 1 or higher TCs across 6 basins from 2010 to 2020
+- Storm Track File: (.txt)
+    - Storm center coordinates, wind speed, pressure with timestamps taken at regular intervals throughout the storm
+- Vertical Wind Shear Vector Data: (.mat)
+    - Shear vector angle and magnitude for WWLLN lightning strokes
+    - Vector angle determines the shear quadrant, used with rainband lightning due to storm behavior differences depending on quadrant
+
+### Definitions
+
+#### Inner Core and Rainband
+We define the inner core as within 100km of storm center, and rainband as between 200km and 400km of storm center.
+
+#### Intensification Stage
+
+We use the following table to categorize intensification stages based off forward-looking 24-hour changes in wind speed (knots). For example, a storm would be categorized as Weakening if its wind speed is 20 knots lower tomorrow at the same time than it is today. Because of this definition, there will not be an intensification stage for the last 24 hours of a tropical cyclone.
 
 **Intensification Stage Bins**
 | Intensification Stage | Change in Winds (Knots) in 24 Hours (Jiang and Ramirez, 2013)|
@@ -43,6 +61,10 @@ We use the following standards to categorize intensification stage and category 
 | Intensifying | 10 to 30 |
 | Rapidly Intensifying | >30 |
 
+#### Category
+
+We use the [Saffir-Simpson Hurricane Wind Scale](https://www.nhc.noaa.gov/aboutsshws.php) to classify category. We categorize storms in two ways: as a whole and by individual time periods. The overall storm category is based on the TC's maximum wind speed, while the current category reflects the wind speed at a specific time period. For example, a TC with a maximum wind speed of 85 knots is classified as Category 2. However, during periods when its wind speed is lower, let's say 65 knots, the current category for that time is Category 1.
+
 **TC Category Bins - Saffir-Simpson Hurricane Wind Scale**
 | TC Category | Sustained Winds (Knots) |
 |  ---------- | ------------|
@@ -52,9 +74,22 @@ We use the following standards to categorize intensification stage and category 
 | 4 | 113-136 kt |
 | 5 | 137 kt or higher |
 
-About shear - only use for rainband bc rainband lightning tends to occur in a specific quadrant, shear quadrants behave differently
+#### Shear Quadrant
+Vertical wind shear is the change in wind speed or direction with altitude, represented by a vector showing the difference between wind vectors at different heights. We use the vertical wind shear angle to determine the shear quadrant, used with rainband lightning due to storm behavior differences depending on the shear quadrant. For this project, we only apply shear quadrant classification to rainband lightning.
 
-** insert the graphic here for the shear quad definition + formulas
+We calculate shear quadrant for rainband lightning using the following formulas.
+
+We use the formula to get the shear angle:
+```
+shearAngleCG = geoAngleCG - shearAngle
+```
+We calculate geoAngleCG (geographic angle of lightning relative to North, where lightning due East of the storm center would give an angle of 90 degrees) using arctan and the distance east/north of the storm center. shearAngle is included in the provided data files.
+
+We then assign the lightning stroke to a shear quadrant using shearAngleCG: (note that the shear vector in the diagram is going towards the right, while the shear angle is calculated relative to North)
+- 0-90 - Downshear Left (DL)
+- 90-180 - Downshear Right (DR)
+- 180-270 - Upshear Right (UR)
+- 270 -360 - Upshear Left (UL)
 
 <img src="shear_quadrant_graphic.png" width="200" height="200">
 
@@ -64,15 +99,15 @@ About shear - only use for rainband bc rainband lightning tends to occur in a sp
 
 **analysis_data** - contains data files used in the Power BI dashboard and intensification analysis created from the lightning burst identification code
 
-**data_pipeline** - contains notebooks used to upload, clean, process, filter, and create data files used in the analysis portion of this project
+**data_pipeline** - contains notebooks used to upload, clean, process, filter, and create data files used in the lightning burst identification and exploratory analysis portions of this project, this directory deals with the raw data files
 
 **exploratory_analysis** - contains notebooks as well as visualizations created in the exploratory analysis portion of this project
 
 **intensification_analysis** - contains notebooks and visualizations for the statistical analysis of the relationship between lightning bursts and TC intensification change
 
-**lightning_burst_identification** - contains notebooks, datasets, and visualizations created in the statistical identification of inner core and rainband lightning bursts at both the individual TC and basin levels
+**lightning_burst_identification** - contains notebooks, datasets, and visualizations created in the statistical identification of inner core and rainband lightning bursts at both the individual TC and basin levels, also contains the Power BI dashboard created in this part of the project
 
-Intermediate files that are too large to upload to Github can be found here, along with the individual TC visualizations created in the lightning burst identification stage of the project: [Google Drive](https://drive.google.com/drive/folders/1VxhljPNirGQL2jP3-bbhCS94neifmepc?usp=sharing)
+Intermediate files that are too large to upload to GitHub can be found here, along with the individual TC visualizations created in the lightning burst identification stage of the project: [Google Drive](https://drive.google.com/drive/folders/1VxhljPNirGQL2jP3-bbhCS94neifmepc?usp=sharing)
 
 ### Directory Structure
 ```
@@ -107,6 +142,8 @@ Intermediate files that are too large to upload to Github can be found here, alo
 ├── lightning_burst_identification
 |   └── data
 |       └── ...
+|   └── images
+|       └── ...
 |   └── visualizations
 |       └── ...
 |   └── README.md
@@ -124,21 +161,35 @@ Intermediate files that are too large to upload to Github can be found here, alo
 └── shear_quadrant_graphic.png
 ```
 
-Detailed documentation on code requirements and file outputs can be found in each folder's README file.
+Detailed documentation on code requirements and file outputs can be found in each folder's README file. Details on the truncated directories in the above directory structure can also be found in each main folder's README file.
 
 <a id="deliverables"></a>
 
-## Repository Components
- [wip]
+## Key Deliverables
+In this section we will briefly introduce the key deliverables of the project.
+
 ### Data Pipeline
+- Combined WWLLN lightning counts and storm track data to use in calculating lightning burst thresholds
+    - Inner core 30-minute binned lightning counts joined to nearest wind and pressure measurements
+    - Rainband 30-minute binned lightning counts joined to nearest wind and pressure measurements, split by shear quadrant
 
 ### Lightning Burst Identification
 - Lightning burst identification Jupyter Notebooks
+    - Inner core individual TC burst threshold calculations and evaluations, basin-level burst threshold calculations and evaluations
+    - Rainband individual TC burst threshold calculations and evaluations
 - Lightning burst identification Power BI dashboard
+    - Flexible visualization tool displaying plots for both inner core and rainband lightning burst detection activities
+- Lightning burst identification visualizations
+    - Individual `.png` files of lightning burst detection visualizations for each TC
+    - Includes both inner core and rainband lightning types
 
 ### Intensification Statistical Analysis
-- jupyter notebooks
-- written report ??
+- Intensification statistical analysis Jupyter Notebooks
+    - Inner core lightning burst and storm intensification statistical analysis at the overall, basin, current category, and category group levels
+    - Rainband lightning burst and storm intensification statistical analysis at the overall, basin, current category, and category group levels
+
+### Written Report
+- Written report detailing the project components and deliverables, as well as methods and intermediate steps taken to create the key deliverables
 
 
 <a id="dependencies"></a>
@@ -155,7 +206,7 @@ This repository consists mostly of Jupyter Notebook files. We include [requireme
 The code in this repository requires the following installations:
 - Python [Official Python Installation Documentation](https://www.python.org/downloads/)
 
-We recommend using [conda](https://docs.conda.io/projects/conda/en/latest/index.html) to [set up the environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file) using the provided `.yml` files in the repository.
+We recommend using [conda](https://docs.conda.io/projects/conda/en/latest/index.html) to set up the environment using the provided `.yml` files in the repository. - [Official Documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)
 
 **A Simple Guide to Setting Up an Environment With Conda:**
 1. Make sure you have the following:
@@ -174,11 +225,51 @@ conda activate nwra_capstone
 ```
 conda env list
 ```
+5. Activate the new environment
+```
+conda activate nwra_capstone
+```
 
 <a id="data"></a>
 
 ### Data
- [wip]
+This project uses the following data sources, initially provided on a USB:
+- World Wide Lightning Location Network (WWLLN) Data: (.txt)
+    - file name ends with `WWLLN_Locations.txt`
+- Storm Track File: (.txt)
+    - file name ends with `Trackfile.txt`
+- Vertical Wind Shear Vector Data: (.mat)
+    - file name ends with `Intensity_Shear.mat`
+
+The data pipeline assumes that the raw data is contained in a folder structure like the one below, where each TC's data is contained in a separate file:
+```
+.
+├── year
+|   └── basin
+|       └── storm number
+|           └── trackfile
+|           └── WWLLN data
+|           └── shear file
+```
+example:
+```
+.
+├── 10
+|   └── ATL
+|       └── 1
+|           └── ATL_10_1_Trackfile.txt
+|           └── ATL_10_1_WWLLN_Locations.txt
+|           └── ATL_10_1_Intensity_Shear.mat
+```
+
+All other intermediate and analysis data files created and used in this project are included in either:
+- `data_pipeline/`
+    - `data/` - data used in `lightning_burst_identification`
+    - `intermediate_data/`* - data used in `data_pipeline/` to create the `data/` files
+- `lightning_burst_identification/data/` - basin-level threshold data for inner core lightning only
+- `analysis_data/` - data used in the Power BI dashboard and `intensification_analysis/`
+
+*files too large to include on GitHub can be found here: [Google Drive](https://drive.google.com/drive/folders/1VxhljPNirGQL2jP3-bbhCS94neifmepc?usp=sharing)
 
 <a id="future-work"></a>
 
@@ -186,6 +277,8 @@ conda env list
 Due to time constraints, we note the following as future work to continue building on the analysis presented in this repository:
 - Lightning burst identification accuracy improvements:
     - Removing landfall from lightning burst analysis - remove data points where TC storm center is within 100km of land since landfall is associated with higher lightning activity regardless of storm intensification stage
+- Expansion of basin-level lightning burst threshold calculations:
+    - Currently, only the inner core has basin-level thresholds, this activity can be applied to the rainband data as well, and can also be performed at the shear quadrant granularity
 - Lightning burst dashboard improvements:
     - Alternatives to using Python visualizations in Power BI due to limitations (users need Python installed, cannot publish to Power BI web, etc.)
     - Prevent burst markers from overlapping when there are multiple markers on one lightning bin for readability
@@ -197,7 +290,8 @@ Due to time constraints, we note the following as future work to continue buildi
 <a id="acknowledgements"></a>
 
 ## Acknowledgements
+WWLLN Data Acknowledgment - The authors are using data from the World Wide Lightning Location Network, a collaborative consortium of over 70 worldwide collaborators, managed at the University of Washington.
 
 Thank you to our sponsors, Dr. Jeremy Thomas and Dr. Natalia Solorzano at NWRA, for making this project happen.
 
-WWLLN Data Acknowledgment - The authors are using data from the World Wide Lightning Location Network, a collaborative consortium of over 70 worldwide collaborators, managed at the University of Washington.
+Special thanks to our UW MSDS capstone coordinator, Dr. Megan Hazen, for organizing the capstone projects and guiding us for the past two quarters.
