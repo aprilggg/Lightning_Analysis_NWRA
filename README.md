@@ -48,6 +48,17 @@ For each TC in our dataset, we have:
 #### Inner Core and Rainband
 We define the inner core as within 100km of storm center, and rainband as between 200km and 400km of storm center.
 
+### Basins
+We use the following abbreviations for the 6 basins:
+| Basin | Abbreviation|
+| ------ | ----------|
+| Atlantic Ocean | ATL |
+| Central Pacific | CPAC |
+| Eastern Pacific | EPAC |
+| Indian Ocean | IO |
+| Southern Hemisphere | SHEM |
+| Western North Pacific | WPAC |
+
 #### Intensification Stage
 
 We use the following table to categorize intensification stages based off forward-looking 24-hour changes in wind speed (knots). For example, a storm would be categorized as Weakening if its wind speed is 20 knots lower tomorrow at the same time than it is today. Because of this definition, there will not be an intensification stage for the last 24 hours of a tropical cyclone.
