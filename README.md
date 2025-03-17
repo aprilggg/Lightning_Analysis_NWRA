@@ -4,7 +4,10 @@ UW MSDS Capstone Project with NorthWest Research Associates (NWRA)
 ## Table of Contents
 * [Objective](#objective)
 * [Background Information](#background)
+    * [Provided Data](#provided-data)
+    * [Definitions](#definitions)
 * [Directory Overview](#directory-overview)
+    * [Directory Structure](#directory-structure)
 * [Key Deliverables](#deliverables)
 * [Dependencies and Setting Up the Repository](#dependencies)
   * [Environment](#environment)
@@ -29,6 +32,8 @@ UW MSDS Capstone Project with NorthWest Research Associates (NWRA)
 ## Background Information
 Tropical cyclones (TCs) are among the most powerful and destructive weather systems on Earth, posing significant threats to life, property, and infrastructure. We aim to explore the relationship between lightning bursts in tropical cyclones and tropical cyclone intensification stages using World Wide Lightning Location Network (WWLLN) data and tropical cyclone wind speed and pressure measurements.
 
+<a id="provided-data"></a>
+
 ### Provided Data
 
 NWRA provided [WWLLN](https://wwlln.net/) lightning and storm track data for TCs across 6 basins from 2010 to 2020, with 984 total TCs in the dataset. For this project, we only include TCs of category 1 or higher in our evaluation of lightning bursts, leaving us with 472 TCs for the lightning burst evaluation and subsequent intensification statistical analysis.
@@ -43,12 +48,14 @@ For each TC in our dataset, we have:
     - Shear vector angle and magnitude for WWLLN lightning strokes
     - Vector angle determines the shear quadrant, used with rainband lightning due to storm behavior differences depending on quadrant
 
+<a id="definitions"></a>
+
 ### Definitions
 
 #### Inner Core and Rainband
 We define the inner core as within 100km of storm center, and rainband as between 200km and 400km of storm center.
 
-### Basins
+#### Basins
 We use the following abbreviations for the 6 basins:
 | Basin | Abbreviation|
 | ------ | ----------|
@@ -119,6 +126,8 @@ We then assign the lightning stroke to a shear quadrant using shearAngleCG: (not
 **lightning_burst_identification** - contains notebooks, datasets, and visualizations created in the statistical identification of inner core and rainband lightning bursts at both the individual TC and basin levels, also contains the Power BI dashboard created in this part of the project
 
 Intermediate files that are too large to upload to GitHub can be found here, along with the individual TC visualizations created in the lightning burst identification stage of the project: [Google Drive](https://drive.google.com/drive/folders/1VxhljPNirGQL2jP3-bbhCS94neifmepc?usp=sharing)
+
+<a id="directory-structure"></a>
 
 ### Directory Structure
 ```
