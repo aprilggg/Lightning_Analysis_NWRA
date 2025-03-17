@@ -175,6 +175,7 @@ Intermediate files that are too large to upload to GitHub can be found here, alo
 |   └── lightning_threshold_rainband.ipynb
 |   └── vis_upload.ipynb
 ├── LICENSE
+├── NWRA Lightning Analysis.pdf
 ├── README.md
 ├── requirement.yml
 ├── requirement_simplified.yml
@@ -209,7 +210,7 @@ In this section we will briefly introduce the key deliverables of the project.
     - Rainband lightning burst and storm intensification statistical analysis at the overall, basin, current category, and category group levels
 
 ### Written Report
-- Written report detailing the project components and deliverables, as well as methods and intermediate steps taken to create the key deliverables
+- Written report detailing the project components and deliverables, as well as methods and intermediate steps taken to create the key deliverables (`NWRA Lightning Analysis.pdf`)
 
 
 <a id="dependencies"></a>
