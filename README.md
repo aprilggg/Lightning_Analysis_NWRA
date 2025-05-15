@@ -176,6 +176,7 @@ Intermediate files that are too large to upload to GitHub can be found here, alo
 |   └── vis_upload.ipynb
 ├── LICENSE
 ├── NWRA Lightning Analysis.pdf
+├── Poster.pdf
 ├── README.md
 ├── requirement.yml
 ├── requirement_simplified.yml
