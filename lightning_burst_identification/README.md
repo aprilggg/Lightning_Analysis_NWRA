@@ -14,7 +14,7 @@
 ### Directory Overview
 
 The files in this directory include:
-- **`dashboard_documentation.ipynb`**
+- **`dashboard_documentation.md`**
     - documentation for Power BI dashboard (`lightning_burst_dashboard.pbix`)
     - includes user guide and developer guide
 - **`images/`**
